@@ -40,14 +40,14 @@ class HandleInertiaRequests extends Middleware
          //get current users access to each apps (role and permission)
         $app_role_permission = $request->route('app_id') ? $user->rolesForApp($request->route('app_id'))->loadMissing('permissions') : null;
 
-        $permissions = $user->rolesForApp($request->route('app_id'))->loadMissing('permissions')
+        $permissions = $request->route('app_id') ? $user->rolesForApp($request->route('app_id'))->loadMissing('permissions')
         ->flatMap(function ($data) {
             return $data->permissions;
         })->map(function ($permission) {
             return [
                 $permission['slug'] => Auth::user()->can($permission['slug'])
             ];
-        })->collapse()->all();
+        })->collapse()->all() : null;
         
         return [
             ...parent::share($request),
