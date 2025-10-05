@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('perkara_id');
             $table->foreign('perkara_id')->references('id')->on('perkaras')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('db_pabyl_master.users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('paboyo_masterapp.users')->onDelete('cascade');
             $table->timestamps();
         });
     }
