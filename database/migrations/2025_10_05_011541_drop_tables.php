@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('app_user', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('app_id');
-            $table->unsignedBigInteger('user_id');
-            $table->timestamps();
-        });
+        Schema::dropIfExists('app_permission');
+        Schema::dropIfExists('app_role');
+        Schema::dropIfExists('app_user');
+        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('permission_role');
     }
 
     /**
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('app_user');
+        //
     }
 };

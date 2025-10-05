@@ -2,7 +2,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import {Link} from '@inertiajs/vue3';
-
+const props = defineProps({
+    app_user:{
+        type:Object
+    }
+});
 </script>
 
 <template>
@@ -23,9 +27,15 @@ import {Link} from '@inertiajs/vue3';
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        Pilih aplikasi berikut: <Link :href="route('app.mediator.dashboard', {app_id:2})">
-                            App Mediator 
-                        </Link>
+                        <p>Selamat datang <span class=" font-bold">{{ $page.props.auth.user.name }}</span></p>
+                       
+                        <ul>
+                            <li v-for="app in props.app_user">
+                                <Link :href="route(app.route_name, {app_id:app.id})">
+                                    {{ app.name }}
+                                </Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

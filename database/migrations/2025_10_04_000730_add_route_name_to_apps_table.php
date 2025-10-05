@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('app', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('apps', function (Blueprint $table) {
+            $table->string('route_name')->after('name');
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('app');
+        Schema::table('apps', function (Blueprint $table) {
+            //
+        });
     }
 };
