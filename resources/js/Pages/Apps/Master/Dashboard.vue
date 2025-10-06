@@ -18,7 +18,7 @@ console.log(props.app_user);
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800"
             >
-                Dashboard
+                Dashboard master aplikasi
             </h2>
         </template>
 
@@ -28,15 +28,7 @@ console.log(props.app_user);
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        <p>Selamat datang <span class=" font-bold">{{ $page.props.auth.user.name }}</span></p>
-                       
-                        <ul>
-                            <li v-for="app in props.app_user">
-                                <Link :href="route(app.route_name, {app_id:app.id})">
-                                    {{ app.name }}
-                                </Link>
-                            </li>
-                        </ul>
+                        <p>Halaman konfigurasi sistem</p>
                     </div>
                 </div>
             </div>

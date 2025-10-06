@@ -33,6 +33,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::prefix('/app_master')->group(function(){
+        Route::get('/{app_id}/dashboard', function(){
+            $app_user = User::find(Auth::user()->id)
+            ->apps;
+
+            return Inertia::render('Apps/Master/Dashboard', [
+                'app_user' => $app_user,
+            ]);
+        })->name('app.master');
+    });
+
     Route::prefix('/app_mediator')->group(function(){
         Route::get('/{app_id}/dashboard', function($app_id){
            
