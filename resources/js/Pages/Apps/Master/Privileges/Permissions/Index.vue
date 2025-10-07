@@ -3,11 +3,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import {Link} from '@inertiajs/vue3';
 const props = defineProps({
-    user_apps:{
+    permissions:{
         type:Object
     }
 });
-console.log(props.user_apps);
+console.log(props.permissions);
 </script>
 
 <template>
@@ -31,7 +31,21 @@ console.log(props.user_apps);
                 >
                     <div class="p-6 text-gray-900">
                         <p class=" font-semibold">Permissions</p>
-                        
+                        <ul>
+                            <li v-for="app in props.permissions">
+                                {{ app.name }}
+                                <ul>
+
+                                    <li v-for="role in app.roles">
+                                        <ul class=" list-disc list-inside">
+                                            <li v-for="permission in role.permissions">
+                                                {{ permission.name }}
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

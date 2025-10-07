@@ -30,7 +30,7 @@ console.log(props.app_role);
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        <p class=" font-semibold">Roles</p>
+                        <p class=" font-semibold">Dafter Roles pada setiap aplikasi</p>
                         <ul>
                             <li v-for="app in props.app_role">
                                 {{ app.name }}

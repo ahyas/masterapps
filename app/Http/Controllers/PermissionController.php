@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\App;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,7 +14,11 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Apps/Master/Privileges/Permissions/Index');
+        $permissions = App::with('roles.permissions')->get();
+
+        return Inertia::render('Apps/Master/Privileges/Permissions/Index', [
+            'permissions' => $permissions
+        ]);
     }
 
     /**
