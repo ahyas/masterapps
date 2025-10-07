@@ -3,8 +3,10 @@
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AppRedirect;
 use App\Http\Controllers\PerkaraController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PrivilegeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Models\App;
@@ -48,7 +50,11 @@ Route::middleware('auth')->group(function () {
         })->name('app.master');
 
         Route::get('/users', [UserController::class, 'index'])->name('app.master.user');
-        Route::get('/privileges', [PrivilegeController::class, 'index'])->name('app.master.privilege');
+        Route::prefix('/privileges')->group(function(){
+            Route::get('/', [PrivilegeController::class, 'index'])->name('app.master.privilege');
+            Route::resource('/roles', RoleController::class);
+            Route::resource('/permissions', PermissionController::class);
+        });
         Route::get('/apps', [AppController::class, 'index'])->name('app.master.app');
     });
 

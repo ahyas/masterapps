@@ -18,7 +18,7 @@ console.log(props.user_apps);
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800"
             >
-                Manage privileges
+                Manage permissions
             </h2>
             <Link :href="route('roles.index', {app_id:$page.props.auth.app_id})" class=" font-semibold text-blue-500">Roles</Link>
             <Link :href="route('permissions.index', {app_id:$page.props.auth.app_id})" class=" ml-1 font-semibold text-blue-500">Permissions</Link>
@@ -30,22 +30,8 @@ console.log(props.user_apps);
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        <p class=" font-semibold">Privileges</p>
+                        <p class=" font-semibold">Permissions</p>
                         
-                        <table class=" table-cell">
-                            <tr v-for="user in props.user_apps" :key="user.id">
-                                <td class=" font-semibold">{{ user.name }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>
-                                    <ul v-if="user.roles.length > 0" class=" list-inside list-disc">
-                                        <li v-for="role in user.roles">{{ role.name }}@
-                                            <span >{{role.app.name}}</span>
-                                        </li>
-                                    </ul>
-                                    <span v-else class=" text-red-600">Undefined</span>
-                                </td>
-                            </tr>
-                        </table>
                     </div>
                 </div>
             </div>
