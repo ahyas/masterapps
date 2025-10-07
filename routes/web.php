@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\AppController;
 use App\Http\Controllers\AppRedirect;
+use App\Http\Controllers\PerkaraController;
+use App\Http\Controllers\PrivilegeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserController;
 use App\Models\App;
 use App\Models\User;
 use Illuminate\Foundation\Application;
@@ -33,8 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::prefix('/app_master')->group(function(){
-        Route::get('/{app_id}/dashboard', function(){
+    Route::prefix('/app_master/{app_id}')->group(function(){
+        Route::get('/dashboard', function(){
             $app_user = User::find(Auth::user()->id)
             ->apps;
 
@@ -42,10 +46,14 @@ Route::middleware('auth')->group(function () {
                 'app_user' => $app_user,
             ]);
         })->name('app.master');
+
+        Route::get('/users', [UserController::class, 'index'])->name('app.master.user');
+        Route::get('/privileges', [PrivilegeController::class, 'index'])->name('app.master.privilege');
+        Route::get('/apps', [AppController::class, 'index'])->name('app.master.app');
     });
 
-    Route::prefix('/app_mediator')->group(function(){
-        Route::get('/{app_id}/dashboard', function($app_id){
+    Route::prefix('/app_mediator/{app_id}')->group(function(){
+        Route::get('/dashboard', function($app_id){
            
             $app_user = User::find(Auth::user()->id)
             ->apps;
@@ -54,6 +62,11 @@ Route::middleware('auth')->group(function () {
                 'app_user' => $app_user,
             ]);
         })->name('app.mediator'); 
+
+        Route::group(['middleware' => 'can:view_perkara'], function(){
+            Route::get('/perkara', [PerkaraController::class, 'index'])->name('app.mediator.perkara');
+        });
+
     });
 
     Route::prefix('/app_bukutamu')->group(function(){
@@ -72,7 +85,9 @@ Route::middleware('auth')->group(function () {
         $app = App::all();
         
         //get apps access for current user
-        $user_apps = $user->apps->unique('slug')->select('id','name')->values();
+        $user_apps = $user->apps->unique('slug')->select('id','name', 'route_name')->values();
+        $route_name = $user_apps->first();
+        $asd = $route_name['route_name'];
         
         //display apps roles and permission (for super admin)
         $app_role = $app->load('roles');
@@ -80,12 +95,16 @@ Route::middleware('auth')->group(function () {
         //get current users access to each apps (role and permission)
         $roles_mediator_app = $user->rolesForApp(1)->load('permissions');
         $roles_bukutamu_app = $user->rolesForApp(2)->load('permissions');
+
+        $can = Auth::user()->can('memilih_mediator');
   
         return response()->json([
             'user_apps'=>$user_apps, 
+            'asd'=>$asd, 
             'roles_mediator_app'=>$roles_mediator_app, 
             'roles_bukutamu_app'=>$roles_bukutamu_app,
-            'app_role' => $app_role
+            'app_role' => $app_role,
+            'can' => $can,
         ]);
     });
 

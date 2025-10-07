@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\App;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,9 +33,27 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        $user = User::find(Auth::user()->id);
+        
+        //get apps acceessibility for current user
+        $user_apps = $user->apps->unique('slug')->select('id','name')->values();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $request->session()->regenerate();
+        
+        if($user_apps->count() > 1 || $user_apps->count() == 0 ){
+
+            return redirect()->intended(route('dashboard', absolute: false));
+        }else{
+            $data = $user_apps->first();
+            $user_apps = $user?->apps->unique('slug')
+            ->select('id','route_name')
+            ->where('id', $data['id'])
+            ->first();
+
+            return redirect()->intended(route($user_apps['route_name'], ['app_id'=>$user_apps['id']]));
+            
+        }
+
     }
 
     /**

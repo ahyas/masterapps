@@ -19,15 +19,9 @@ const props = defineProps({
                 <span class="font-medium">Success alert!</span> Change a few things up and try submitting again.
             </div>
         </template>
-
+        
         <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
-            Selamat datang <span class=" font-semibold">{{ $page.props.auth.user.name }}</span>. Anda sedang mengakses <span class=" font-semibold">{{$page.props.auth.user_apps.name}}</span> sebagai:
-            <ul class="max-w-md text-gray-800 font-semibold text-sm list-disc list-inside dark:text-gray-400">
-                <li v-for="role in $page.props.auth.permissions">
-                    {{ role.name }}
-                </li>
-            </ul>
-            {{ $page.props.auth.can }}
+            <p>Perkara saya</p>
         </div>
     </FlowbiteLayout>
 </template>
