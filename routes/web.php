@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AppRedirect;
+use App\Http\Controllers\MediasiController;
 use App\Http\Controllers\PerkaraController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PrivilegeController;
@@ -71,6 +72,10 @@ Route::middleware('auth')->group(function () {
 
         Route::group(['middleware' => 'can:view_perkara'], function(){
             Route::get('/perkara', [PerkaraController::class, 'index'])->name('app.mediator.perkara');
+        });
+
+        Route::group(['middleware' => 'can:manage_mediasi'], function(){
+            Route::get('/mediasi', [MediasiController::class, 'index'])->name('mediasi.index');
         });
 
     });

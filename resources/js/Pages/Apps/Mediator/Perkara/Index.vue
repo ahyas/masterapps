@@ -19,9 +19,9 @@ const props = defineProps({
                 <span class="font-medium">Success alert!</span> Change a few things up and try submitting again.
             </div>
         </template>
-        
+
         <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
-            <p>Perkara saya</p>
+            <p>Menampilkan jenis perkara mediasi</p>
         </div>
     </FlowbiteLayout>
 </template>

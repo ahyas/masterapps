@@ -65,7 +65,7 @@ onMounted(()=>{
           <ul class="space-y-2 font-medium">
             <li>
             <Link
-                :href="route('home')"
+                :href="route('dashboard')"
                 class="active:text-blue-500"
             >
                 <div class="flex items-center p-2 rounded-lg text-gray-200 hover:bg-gray-600 group">
@@ -98,9 +98,9 @@ onMounted(()=>{
                 </Link>
             </li>
 
-            <li v-if="$page.props.auth.can.view_perkara">
+            <li v-if="$page.props.auth.can.manage_mediasi">
                 <Link
-                    :href="route('app.mediator.perkara', {app_id:$page.props.auth.app_id})"
+                    :href="route('mediasi.index', {app_id:$page.props.auth.app_id})"
                     class="active:text-blue-500"
                 >
                     <div class="flex items-center p-2 rounded-lg text-gray-200 hover:bg-gray-600 group">
@@ -109,31 +109,12 @@ onMounted(()=>{
                         <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
                     </svg>
                     <span class="ms-3">
-                            Perkara
+                            Perkara mediasi
                         </span>
                     </div>
                 </Link>
             </li>
-
-            <li>
-                <Link
-                    :href="route('app.mediator', {app_id:1})"
-                    class="active:text-blue-500"
-                >
-                    <div class="flex items-center p-2 rounded-lg text-gray-200 hover:bg-gray-600 group">
-                    <svg class="w-5 h-5 text-gray-200 transition duration-75" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
-                        <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
-                        <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
-                    </svg>
-                    <span class="ms-3">
-                            Proses mediasi
-                        </span>
-                    </div>
-                </Link>
-            </li>
-
-
-                <li>
+                <li v-if="$page.props.auth.can.manage_report">
                     <button type="button" class="flex items-center w-full p-2 text-base text-gray-200 hover:bg-gray-600 transition duration-75 rounded-lg group" aria-controls="dropdown-reports" data-collapse-toggle="dropdown-reports">
                         <svg class="flex-shrink-0 w-5 h-5 transition duration-75 text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z"/>
@@ -145,59 +126,40 @@ onMounted(()=>{
                     </button>
                     <ul id="dropdown-reports" class="hidden">
                         <li>
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Daily Sales</a>
+                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Perkara mediasi</a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Sales By Category</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Daily Payment</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Top Sales</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Inventory</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Profit</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Profit Chart</a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Sales by Customer</a>
+                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Keberhasilan mediator</a>
                         </li>
                     </ul>
                 </li>
 
-                <li>
-                    <Link
-                        :href="route('home')"
-                        class="active:text-blue-500"
-                    >
-                        <div class="flex items-center p-2 rounded-lg text-gray-200 hover:bg-gray-600 group">
-                            <svg class="w-5 h-5 text-gray-200 transition duration-75" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                <li v-if="$page.props.auth.can.manage_setting">
+                    <button type="button" class="flex items-center w-full p-2 text-base text-gray-200 hover:bg-gray-600 transition duration-75 rounded-lg group" aria-controls="dropdown-settings" data-collapse-toggle="dropdown-settings">
+                        <svg class="w-5 h-5 text-gray-200 transition duration-75" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                                 <path d="M1 5h1.424a3.228 3.228 0 0 0 6.152 0H19a1 1 0 1 0 0-2H8.576a3.228 3.228 0 0 0-6.152 0H1a1 1 0 1 0 0 2Zm18 4h-1.424a3.228 3.228 0 0 0-6.152 0H1a1 1 0 1 0 0 2h10.424a3.228 3.228 0 0 0 6.152 0H19a1 1 0 0 0 0-2Zm0 6H8.576a3.228 3.228 0 0 0-6.152 0H1a1 1 0 0 0 0 2h1.424a3.228 3.228 0 0 0 6.152 0H19a1 1 0 0 0 0-2Z"/>
                             </svg>
-                            <span class="ms-3">
-                                Settings
-                            </span>
-                        </div>
-                    </Link>
+                        <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Pengaturan</span>
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                        </svg>
+                    </button>
+                    <ul id="dropdown-settings" class="hidden">
+                        <li v-if="$page.props.auth.can.hak_akses">
+                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Hak akses</a>
+                        </li>
+                        <li v-if="$page.props.auth.can.aksesibilitas">
+                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Aksesibilitas</a>
+                        </li>
+                        <li v-if="$page.props.auth.can.validasi_akun">
+                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Validasi akun</a>
+                        </li>
+                    </ul>
                 </li>
 
           </ul>
 
         <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-500">
-            <li>
-                <a href="#" class="flex items-center p-2 rounded-lg text-gray-200 hover:bg-gray-600 group">
-                <svg class="w-5 h-5 text-gray-200 transition duration-75" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 20">
-                    <path d="M7.958 19.393a7.7 7.7 0 0 1-6.715-3.439c-2.868-4.832 0-9.376.944-10.654l.091-.122a3.286 3.286 0 0 0 .765-3.288A1 1 0 0 1 4.6.8c.133.1.313.212.525.347A10.451 10.451 0 0 1 10.6 9.3c.5-1.06.772-2.213.8-3.385a1 1 0 0 1 1.592-.758c1.636 1.205 4.638 6.081 2.019 10.441a8.177 8.177 0 0 1-7.053 3.795Z"/>
-                </svg>
-                <span class="ms-3">Upgrade to Pro</span>
-                </a>
-            </li>
             <li>
                 <a href="#" class="flex items-center p-2 rounded-lg text-gray-200 hover:bg-gray-600 group">
                 <svg class="w-5 h-5 text-gray-200 transition duration-75" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
