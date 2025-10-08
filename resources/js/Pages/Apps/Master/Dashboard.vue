@@ -36,7 +36,7 @@ console.log(props.app_user);
                                 </Link>
                             </li>
                             <li>
-                                <Link :href="route('app.master.privilege', {app_id: $page.props.auth.app_id})">
+                                <Link :href="route('privileges.index', {app_id: $page.props.auth.app_id})">
                                     Manage Privileges
                                 </Link>
                             </li>

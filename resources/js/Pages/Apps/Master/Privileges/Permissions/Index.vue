@@ -20,7 +20,8 @@ console.log(props.permissions);
             >
                 Manage permissions
             </h2>
-            <Link :href="route('roles.index', {app_id:$page.props.auth.app_id})" class=" font-semibold text-blue-500">Roles</Link>
+            <Link :href="route('privileges.index', {app_id:$page.props.auth.app_id})" class=" font-semibold text-blue-500">Privileges</Link>
+            <Link :href="route('roles.index', {app_id:$page.props.auth.app_id})" class=" ml-1 font-semibold text-blue-500">Roles</Link>
             <Link :href="route('permissions.index', {app_id:$page.props.auth.app_id})" class=" ml-1 font-semibold text-blue-500">Permissions</Link>
         </template>
 
@@ -30,13 +31,15 @@ console.log(props.permissions);
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        <p class=" font-semibold">Permissions</p>
+                        <p class=" font-semibold">Dafter Permissions</p>
+                        <p class=" mb-2">Hak akses yang dimiliki pada setiap aplikasi</p>
                         <ul>
-                            <li v-for="app in props.permissions">
-                                {{ app.name }}
-                                <ul>
+                            <li v-for="app in props.permissions" class=" mb-2">
+                                <span class=" font-semibold">{{ app.name }}</span> :
+                                <ul class=" text-sm">
 
                                     <li v-for="role in app.roles">
+                                        {{ role.name }}
                                         <ul class=" list-disc list-inside">
                                             <li v-for="permission in role.permissions">
                                                 {{ permission.name }}

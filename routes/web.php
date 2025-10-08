@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/users', [UserController::class, 'index'])->name('app.master.user');
         Route::prefix('/privileges')->group(function(){
-            Route::get('/', [PrivilegeController::class, 'index'])->name('app.master.privilege');
+            Route::get('/', [PrivilegeController::class, 'index'])->name('privileges.index');
             Route::resource('/roles', RoleController::class);
             Route::resource('/permissions', PermissionController::class);
         });

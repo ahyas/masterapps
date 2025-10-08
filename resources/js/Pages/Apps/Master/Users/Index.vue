@@ -29,7 +29,7 @@ console.log(props.users);
                 >
                     <div class="p-6 text-gray-900">
                         <p class=" font-semibold">Daftar user</p>
-                        <table>
+                        <table class=" table text-sm">
                             <thead>
                                 <tr>
                                     <td>Nama</td>

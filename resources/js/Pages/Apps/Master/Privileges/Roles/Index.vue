@@ -20,7 +20,8 @@ console.log(props.app_role);
             >
                 Manage roles
             </h2>
-            <Link :href="route('roles.index', {app_id:$page.props.auth.app_id})"  class=" font-semibold text-blue-500">Roles</Link>
+            <Link :href="route('privileges.index', {app_id:$page.props.auth.app_id})" class=" font-semibold text-blue-500">Privileges</Link>
+            <Link :href="route('roles.index', {app_id:$page.props.auth.app_id})"  class=" ml-1 font-semibold text-blue-500">Roles</Link>
             <Link :href="route('permissions.index', {app_id:$page.props.auth.app_id})" class=" ml-1 font-semibold text-blue-500">Permissions</Link>
         </template>
 
@@ -30,11 +31,13 @@ console.log(props.app_role);
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        <p class=" font-semibold">Dafter Roles pada setiap aplikasi</p>
+                        <p class=" font-semibold">Daftar Roles</p>
+                        <p class=" mb-2">Setiap aplikasi memiliki roles nya masing-masing</p>
+                        <hr></hr>
                         <ul>
-                            <li v-for="app in props.app_role">
-                                {{ app.name }}
-                                <ul class=" list-disc list-inside">
+                            <li v-for="app in props.app_role" class=" mb-2">
+                                <span class=" font-semibold ">{{ app.name }}</span>
+                                <ul class=" list-disc list-inside text-sm">
                                     <li v-for="role in app.roles">
                                         {{ role.name }}
                                     </li>
