@@ -35,14 +35,14 @@ console.log(props.permissions);
                         <p class=" mb-2">Hak akses yang dimiliki pada setiap aplikasi</p>
                         <ul>
                             <li v-for="app in props.permissions" class=" mb-2">
-                                <span class=" font-semibold">{{ app.name }}</span> :
+                                <span class=" font-semibold">{{ app.name }} </span>
                                 <ul class=" text-sm">
 
                                     <li v-for="role in app.roles">
-                                        {{ role.name }}
+                                        {{ role.name }} <Link class=" text-blue-600 text-sm">Tambah</Link>
                                         <ul class=" list-disc list-inside">
                                             <li v-for="permission in role.permissions">
-                                                {{ permission.name }}
+                                                {{ permission.name }} ({{ permission.slug }}) <Link class=" text-red-600">Delete</Link>
                                             </li>
                                         </ul>
                                     </li>
