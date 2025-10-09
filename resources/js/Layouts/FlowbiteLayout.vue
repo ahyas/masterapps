@@ -152,7 +152,7 @@ onMounted(()=>{
                             <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Aksesibilitas</a>
                         </li>
                         <li v-if="$page.props.auth.can.validasi_akun">
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Validasi akun</a>
+                            <Link :href="route('validasi_akun.index', {app_id:$page.props.auth.app_id})" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Validasi akun</Link>
                         </li>
                     </ul>
                 </li>

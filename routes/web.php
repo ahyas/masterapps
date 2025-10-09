@@ -10,12 +10,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ValidasiAkunController;
 use App\Models\App;
 use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -78,6 +80,10 @@ Route::middleware('auth')->group(function () {
             Route::get('/mediasi', [MediasiController::class, 'index'])->name('mediasi.index');
         });
 
+        Route::group(['middleware' => 'can:validasi_akun'], function(){
+            Route::get('/validasi_akun', [ValidasiAkunController::class, 'index'])->name('validasi_akun.index');
+        });
+
     });
 
     Route::prefix('/app_bukutamu')->group(function(){
@@ -108,8 +114,31 @@ Route::middleware('auth')->group(function () {
         $roles_bukutamu_app = $user->rolesForApp(2)->load('permissions');
 
         $can = Auth::user()->can('memilih_mediator');
-  
+        
+        //batas tanggal
+        $first_date = new DateTime('2025-09-01 00:00:00');
+
+        //last date 
+        $last_date = new DateTime('2025-09-15 00:00:00');
+
+        //user yang masuk tahap mediasi
+        $mediasi = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi')
+        ->where('diinput_tanggal', '>=', $first_date)
+        ->where('diinput_tanggal', '<=', $last_date)
+        ->get();
+
+        foreach ($mediasi as $row) {
+            DB::connection('mediasiapp_conn')->table('transactions')->updateOrInsert(
+                ['id' => $row->id],
+                (array) $row
+            );
+        }
+
         return response()->json([
+            'mediasi' => [
+                'jumlah'=>$mediasi->count(),
+                'table'=>$mediasi
+            ],
             'user_apps'=>$user_apps, 
             'asd'=>$asd, 
             'roles_mediator_app'=>$roles_mediator_app, 
