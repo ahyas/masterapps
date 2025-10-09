@@ -145,8 +145,8 @@ onMounted(()=>{
                         </svg>
                     </button>
                     <ul id="dropdown-settings" class="hidden">
-                        <li v-if="$page.props.auth.can.hak_akses">
-                            <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Hak akses</a>
+                        <li v-if="$page.props.auth.can.manage_hak_akses">
+                            <Link :href="route('app.mediator.privileges', {app_id:$page.props.auth.app_id})" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Privileges</Link>
                         </li>
                         <li v-if="$page.props.auth.can.aksesibilitas">
                             <a href="#" class="flex items-center w-full p-2 text-sm text-gray-300 transition duration-75 rounded-lg pl-11 group hover:bg-gray-600">Aksesibilitas</a>

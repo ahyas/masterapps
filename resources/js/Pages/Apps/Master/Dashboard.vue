@@ -28,7 +28,7 @@ console.log(props.app_user);
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        <p class=" font-semibold">Halaman konfigurasi sistem:</p>
+                        <p class=" font-semibold">Konfigurasi sistem:</p>
                         <ul class="list-disc list-inside">
                             <li>
                                 <Link :href="route('app.master.user', {app_id : $page.props.auth.app_id})">

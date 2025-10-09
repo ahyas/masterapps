@@ -84,10 +84,14 @@ Route::middleware('auth')->group(function () {
             Route::get('/validasi_akun', [ValidasiAkunController::class, 'index'])->name('validasi_akun.index');
         });
 
+        Route::group(['middleware' => 'can:manage_hak_akses'], function(){
+            Route::get('/hak_akses', [PrivilegeController::class, 'index'])->name('app.mediator.privileges');
+        });
+
     });
 
     Route::prefix('/app_bukutamu')->group(function(){
-        Route::get('/{app_id}/dashboard', function($app_id){
+        Route::get('/{app_id}/dashboard', function(){
             $app_user = User::find(Auth::user()->id)
             ->with('apps')->first();
 
