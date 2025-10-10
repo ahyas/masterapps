@@ -45,6 +45,11 @@ console.log(props.app_user);
                                     Manage Apps
                                 </Link>
                             </li>
+                            <li>
+                                <Link :href="route('app.master.sinkron', {app_id: $page.props.auth.app_id})">
+                                    Sinkronisasi
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

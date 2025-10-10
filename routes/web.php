@@ -8,6 +8,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PrivilegeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SinkronController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ValidasiAkunController;
@@ -59,6 +60,9 @@ Route::middleware('auth')->group(function () {
             Route::resource('/permissions', PermissionController::class);
         });
         Route::get('/apps', [AppController::class, 'index'])->name('app.master.app');
+        Route::group(['middleware' => 'can:sinkron'], function(){
+            Route::get('/sinkron', [SinkronController::class, 'index'])->name('app.master.sinkron');
+        });
     });
 
     Route::prefix('/app_mediator/{app_id}')->group(function(){
@@ -120,28 +124,29 @@ Route::middleware('auth')->group(function () {
         $can = Auth::user()->can('memilih_mediator');
         
         //batas tanggal
-        $first_date = new DateTime('2025-09-01 00:00:00');
+        $first_date = new DateTime('2025-09-15 00:00:00');
 
         //last date 
-        $last_date = new DateTime('2025-09-15 00:00:00');
+        $last_date = new DateTime('2025-09-25 00:00:00');
 
         //user yang masuk tahap mediasi
-        $mediasi = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi')
+        $perkara = DB::connection('paboyo_sync_sipp')->table('perkara')
         ->where('diinput_tanggal', '>=', $first_date)
         ->where('diinput_tanggal', '<=', $last_date)
         ->get();
 
-        foreach ($mediasi as $row) {
-            DB::connection('mediasiapp_conn')->table('transactions')->updateOrInsert(
-                ['id' => $row->id],
-                (array) $row
+        foreach ($perkara as $row) {
+            DB::connection('mediasiapp_conn')->table('perkaras')->updateOrInsert(
+                ['id' => $row->perkara_id],
+                ['tgl_pendaftaran' =>$row->tanggal_pendaftaran, 'nomor_perkara'=>$row->nomor_perkara, 'diinput_tgl' =>$row->diinput_tanggal, 'diperbaharui_tgl'=>$row->diperbaharui_tanggal]
             );
         }
 
         return response()->json([
             'mediasi' => [
-                'jumlah'=>$mediasi->count(),
-                'table'=>$mediasi
+                'jumlah_data_disinkron'=>$perkara->count(),
+                'jumlah_total'=>DB::connection('mediasiapp_conn')->table('perkaras')->get()->count(),
+                'table'=>$perkara
             ],
             'user_apps'=>$user_apps, 
             'asd'=>$asd, 
