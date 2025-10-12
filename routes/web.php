@@ -61,7 +61,10 @@ Route::middleware('auth')->group(function () {
         });
         Route::get('/apps', [AppController::class, 'index'])->name('app.master.app');
         Route::group(['middleware' => 'can:sinkron'], function(){
-            Route::get('/sinkron', [SinkronController::class, 'index'])->name('app.master.sinkron');
+            Route::prefix('sinkron')->group(function(){
+                Route::get('/', [SinkronController::class, 'index'])->name('app.master.sinkron');
+                Route::get('/fetch_data', [SinkronController::class, 'fetch_data'])->name('app.master.fetch_data');
+            });
         });
     });
 
@@ -122,38 +125,59 @@ Route::middleware('auth')->group(function () {
         $roles_bukutamu_app = $user->rolesForApp(2)->load('permissions');
 
         $can = Auth::user()->can('memilih_mediator');
-        
-        //batas tanggal
-        $first_date = new DateTime('2025-09-15 00:00:00');
 
-        //last date 
-        $last_date = new DateTime('2025-09-25 00:00:00');
+        $mediasi_pihak1 = DB::connection('paboyo_sync_sipp')
+        ->table('perkara_mediasi AS a')
+        ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
+        ->join('perkara AS b', 'a.perkara_id', 'b.perkara_id')
+        ->join('mediator AS c', 'a.mediator_id', 'c.id')
+        ->join('perkara_pihak1 AS d', 'a.perkara_id', 'd.perkara_id')
+        ->join('pihak AS f', 'd.pihak_id', 'f.id')
+        ->select(
+            'a.perkara_id', 
+            'b.tanggal_pendaftaran', 
+            'b.nomor_perkara', 
+            'b.diinput_tanggal AS perkara_diinput_tanggal',  
+            'b.diperbaharui_tanggal AS perkara_diperbaharui_tanggal',
+            'f.id AS pihak_id', 
+            'd.nama AS pihak_nama', 
+            'd.diinput_tanggal AS perkara_pihak_diinput_tanggal', 
+            'd.diperbaharui_tanggal AS perkara_pihak_diperbaharui_tanggal',
+            'f.email AS pihak_email', 
+            'f.nomor_indentitas AS pihak_nik', 
+            'f.telepon', 
+            'f.alamat',
+            'c.id AS mediator_id', 
+            'c.nama_gelar AS mediator_nama');
 
-        //user yang masuk tahap mediasi
-        $perkara = DB::connection('paboyo_sync_sipp')->table('perkara')
-        ->where('diinput_tanggal', '>=', $first_date)
-        ->where('diinput_tanggal', '<=', $last_date)
-        ->get();
+        $mediasi_pihak2 = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi AS a')
+        ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
+        ->join('perkara AS b', 'a.perkara_id', 'b.perkara_id')
+        ->join('mediator AS c', 'a.mediator_id', 'c.id')
+        ->join('perkara_pihak2 AS e', 'a.perkara_id', 'e.perkara_id')
+        ->join('pihak AS g', 'e.pihak_id', 'g.id')
+        ->select(
+            'a.perkara_id', 
+            'b.tanggal_pendaftaran', 
+            'b.nomor_perkara',  
+            'b.diinput_tanggal AS perkara_diinput_tanggal',  
+            'b.diperbaharui_tanggal AS perkara_diperbaharui_tanggal',  
+            'g.id AS pihak_id', 
+            'e.nama AS pihak_nama', 
+            'e.diinput_tanggal AS perkara_pihak_diinput_tanggal', 
+            'e.diperbaharui_tanggal AS perkara_pihak_diperbaharui_tanggal ', 
+            'g.email AS pihak_email', 
+            'g.nomor_indentitas AS pihak_nik', 
+            'g.telepon', 
+            'g.alamat', 
+            'c.id AS mediator_id', 
+            'c.nama_gelar AS mediator_nama');
 
-        foreach ($perkara as $row) {
-            DB::connection('mediasiapp_conn')->table('perkaras')->updateOrInsert(
-                ['id' => $row->perkara_id],
-                ['tgl_pendaftaran' =>$row->tanggal_pendaftaran, 'nomor_perkara'=>$row->nomor_perkara, 'diinput_tgl' =>$row->diinput_tanggal, 'diperbaharui_tgl'=>$row->diperbaharui_tanggal]
-            );
-        }
+        $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->orderBy('perkara_id', 'ASC')->get();
 
         return response()->json([
-            'mediasi' => [
-                'jumlah_data_disinkron'=>$perkara->count(),
-                'jumlah_total'=>DB::connection('mediasiapp_conn')->table('perkaras')->get()->count(),
-                'table'=>$perkara
-            ],
-            'user_apps'=>$user_apps, 
-            'asd'=>$asd, 
-            'roles_mediator_app'=>$roles_mediator_app, 
-            'roles_bukutamu_app'=>$roles_bukutamu_app,
-            'app_role' => $app_role,
-            'can' => $can,
+            'count'=>$union->count(),
+            'mediasi_pihak2'=>$union,
         ]);
     });
 
