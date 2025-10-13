@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SyncAllDataJob;
 use App\Jobs\SyncDataSIPPJob;
 use DateTime;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class SinkronController extends Controller
     }
 
     public function fetch_data($app_id){
-        SyncDataSIPPJob::dispatch();
+        SyncAllDataJob::dispatch();
 
         return response()->json(['message' => 'Sync job queued successfully!']);
     }

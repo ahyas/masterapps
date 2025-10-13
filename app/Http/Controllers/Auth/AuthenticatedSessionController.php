@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
         
         if($user_apps->count() > 1 || $user_apps->count() == 0 ){
 
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('dashboard', absolute: false)); //diarahkan ke halaman etalase aplikasi
         }else{
             $data = $user_apps->first();
             $user_apps = $user?->apps->unique('slug')
@@ -50,7 +50,7 @@ class AuthenticatedSessionController extends Controller
             ->where('id', $data['id'])
             ->first();
 
-            return redirect()->intended(route($user_apps['route_name'], ['app_id'=>$user_apps['id']]));
+            return redirect()->intended(route($user_apps['route_name'], ['app_id'=>$user_apps['id']])); //diarahkan ke dashboard aplikasi
             
         }
 

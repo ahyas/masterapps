@@ -133,6 +133,7 @@ Route::middleware('auth')->group(function () {
         ->join('mediator AS c', 'a.mediator_id', 'c.id')
         ->join('perkara_pihak1 AS d', 'a.perkara_id', 'd.perkara_id')
         ->join('pihak AS f', 'd.pihak_id', 'f.id')
+        ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
         ->select(
             'a.perkara_id', 
             'b.tanggal_pendaftaran', 
@@ -147,8 +148,7 @@ Route::middleware('auth')->group(function () {
             'f.nomor_indentitas AS pihak_nik', 
             'f.telepon', 
             'f.alamat',
-            'c.id AS mediator_id', 
-            'c.nama_gelar AS mediator_nama');
+            'h.mediator_id');
 
         $mediasi_pihak2 = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi AS a')
         ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
@@ -156,6 +156,7 @@ Route::middleware('auth')->group(function () {
         ->join('mediator AS c', 'a.mediator_id', 'c.id')
         ->join('perkara_pihak2 AS e', 'a.perkara_id', 'e.perkara_id')
         ->join('pihak AS g', 'e.pihak_id', 'g.id')
+        ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
         ->select(
             'a.perkara_id', 
             'b.tanggal_pendaftaran', 
@@ -170,15 +171,17 @@ Route::middleware('auth')->group(function () {
             'g.nomor_indentitas AS pihak_nik', 
             'g.telepon', 
             'g.alamat', 
-            'c.id AS mediator_id', 
-            'c.nama_gelar AS mediator_nama');
+            'h.mediator_id');
 
         $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->orderBy('perkara_id', 'ASC')->get();
+        $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
 
         return response()->json([
             'count'=>$union->count(),
+            'mediators'=>$data_mediator,
             'mediasi_pihak2'=>$union,
         ]);
+        
     });
 
 

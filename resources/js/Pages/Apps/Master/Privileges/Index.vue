@@ -36,7 +36,7 @@ console.log(props.user_apps);
                         <hr></hr>
                         <ul>
                             <li v-for="user in props.user_apps" :key="user.id" class=" mb-2">
-                                <span class=" font-semibold">{{ user.name }}</span> {{ user.email }}
+                                <span class=" font-semibold">{{ user.name }}</span> <span v-if="user.email">{{ user.email }}</span><span v-else class="text-red-600">Email undefined</span>
                                 <ul v-if="user.roles.length > 0" class=" list-inside list-disc text-sm">
                                     <li v-for="role in user.roles">{{ role.name }}@
                                         <span >{{role.app.name}}</span>
@@ -44,7 +44,7 @@ console.log(props.user_apps);
                                 </ul>
                                 <ul v-else class="list-inside">
                                     <li>
-                                        <span class=" text-red-600">Undefined</span>
+                                        <span class=" text-red-600">Role undefined</span>
                                     </li>
                                 </ul>
                             </li>
