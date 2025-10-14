@@ -76,4 +76,14 @@ class User extends Authenticatable
 
         return false;
     }
+
+    public function uniqueApps()
+    {
+        return $this->belongsToMany(App::class, 'app_role_user')
+                    ->withPivot('role_id')
+                    ->withTimestamps()
+                    ->select('apps.*')
+                    ->distinct();
+    }
+
 }

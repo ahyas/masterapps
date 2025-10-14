@@ -186,6 +186,8 @@ Route::middleware('auth')->group(function () {
 
         return response()->json([
             'count'=>$union->count(),
+            'app' => $user->uniqueApps()->pluck('name'),
+            'app2' => $user->app_names,
             'mediators'=>$data_mediator,
             'mediasi_pihak2'=>$union,
         ]);
