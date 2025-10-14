@@ -20,10 +20,10 @@ onMounted(()=>{
                    <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
                 </svg>
              </button>
-            <Link :href="route('home')">
+            <Link :href="route($page.props.auth.user_apps.route_name, {app_id:$page.props.auth.user_apps.id})">
                 <div class="flex ms-2 md:me-24">
                 <img src="https://img.icons8.com/?size=100&id=cy8NnWBeE4TL&format=png&color=000000" class="h-8 me-3" alt="FlowBite Logo" />
-                <span class="self-center text-xl font-semibold sm:text-xl whitespace-nowrap text-white">App Mediator</span>
+                <span class="self-center text-xl font-semibold sm:text-xl whitespace-nowrap text-white">{{ $page.props.auth.user_apps.name }}</span>
                 </div>
             </Link>
           </div>

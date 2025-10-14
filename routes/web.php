@@ -69,43 +69,51 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('/app_mediator/{app_id}')->group(function(){
-        Route::get('/dashboard', function($app_id){
-           
-            $app_user = User::find(Auth::user()->id)
-            ->apps;
 
-            return Inertia::render('Apps/Mediator/Dashboard', [
-                'app_user' => $app_user,
-            ]);
-        })->name('app.mediator'); 
+        Route::group(['middleware'=>'can:access_mediator'], function(){
 
-        Route::group(['middleware' => 'can:view_perkara'], function(){
-            Route::get('/perkara', [PerkaraController::class, 'index'])->name('app.mediator.perkara');
-        });
+            Route::get('/dashboard', function($app_id){
+            
+                $app_user = User::find(Auth::user()->id)
+                ->apps;
 
-        Route::group(['middleware' => 'can:manage_mediasi'], function(){
-            Route::get('/mediasi', [MediasiController::class, 'index'])->name('mediasi.index');
-        });
+                return Inertia::render('Apps/Mediator/Dashboard', [
+                    'app_user' => $app_user,
+                ]);
+            })->name('app.mediator'); 
 
-        Route::group(['middleware' => 'can:validasi_akun'], function(){
-            Route::get('/validasi_akun', [ValidasiAkunController::class, 'index'])->name('validasi_akun.index');
-        });
+            Route::group(['middleware' => 'can:view_perkara'], function(){
+                Route::get('/perkara', [PerkaraController::class, 'index'])->name('app.mediator.perkara');
+            });
 
-        Route::group(['middleware' => 'can:manage_hak_akses'], function(){
-            Route::get('/hak_akses', [PrivilegeController::class, 'index'])->name('app.mediator.privileges');
+            Route::group(['middleware' => 'can:manage_mediasi'], function(){
+                Route::get('/mediasi', [MediasiController::class, 'index'])->name('mediasi.index');
+            });
+
+            Route::group(['middleware' => 'can:validasi_akun'], function(){
+                Route::get('/validasi_akun', [ValidasiAkunController::class, 'index'])->name('validasi_akun.index');
+            });
+
+            Route::group(['middleware' => 'can:manage_hak_akses'], function(){
+                Route::get('/hak_akses', [PrivilegeController::class, 'index'])->name('app.mediator.privileges');
+            });
+
         });
 
     });
 
     Route::prefix('/app_bukutamu')->group(function(){
-        Route::get('/{app_id}/dashboard', function(){
-            $app_user = User::find(Auth::user()->id)
-            ->with('apps')->first();
+        Route::group(['middleware'=>'can:access_bukutamu'], function(){
+            Route::get('/{app_id}/dashboard', function(){
+                $app_user = User::find(Auth::user()->id)
+                ->with('apps')->first();
 
-            return Inertia::render('Apps/Bukutamu/Dashboard', [
-                'app_user' => $app_user,
-            ]);
-        })->name('app.bukutamu');
+                return Inertia::render('Apps/Bukutamu/Dashboard', [
+                    'app_user' => $app_user,
+                ]);
+            })->name('app.bukutamu');
+        });
+
     });
 
     Route::get('/test', function(){

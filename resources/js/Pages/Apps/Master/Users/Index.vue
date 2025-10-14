@@ -32,14 +32,17 @@ console.log(props.users);
                         <table class=" table text-sm">
                             <thead>
                                 <tr>
-                                    <td>Nama</td>
-                                    <td>Email</td>
+                                    <th>Nama</th>
+                                    <th>Email</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="user in props.users">
                                     <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        <span v-if="user.email">{{ user.email }}</span>
+                                        <span v-else class=" text-red-600">Undefined</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

@@ -1,12 +1,12 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 import { initFlowbite } from 'flowbite';
 
 onMounted(()=>{
     initFlowbite();
 });
-
+console.log(usePage().props.auth.user_apps)
 </script>
 
 <template>
