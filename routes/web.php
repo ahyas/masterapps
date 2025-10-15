@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AppController;
-use App\Http\Controllers\AppRedirect;
 use App\Http\Controllers\MediasiController;
 use App\Http\Controllers\PerkaraController;
 use App\Http\Controllers\PermissionController;
@@ -9,7 +8,6 @@ use App\Http\Controllers\PrivilegeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SinkronController;
-use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ValidasiAkunController;
 use App\Models\App;
