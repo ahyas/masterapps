@@ -5,9 +5,16 @@ import { Head } from '@inertiajs/vue3';
 const props = defineProps({
     app_user:{
         type:Object
-    }
+    },
+    perkara_mediasi:{
+        type:Object
+    },
+    current_user:{
+        type:Number
+    },
 });
-
+console.log(props.perkara_mediasi)
+console.log(props.current_user)
 </script>
 
 <template>

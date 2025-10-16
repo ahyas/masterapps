@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Doctrine\DBAL\Query\Union;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,9 +17,12 @@ class SyncAllDataJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+
+    protected $union;
+
+    public function __construct($union)
     {
-        //
+        $this->union = $union;
     }
 
     /**
@@ -28,6 +32,10 @@ class SyncAllDataJob implements ShouldQueue
     {
         // Dispatch each sync job separately
         SyncDataMediatorJob::dispatch();
-        SyncDataSIPPJob::dispatch();
+        SyncDataPihakJob::dispatch($this->union);
+        SyncDataUser::dispatch($this->union);
+        SyncDataAppRoleUser::dispatch($this->union);
+        SyncDataPerkara::dispatch($this->union);
+        SyncDetailPerkara::dispatch($this->union);
     }
 }
