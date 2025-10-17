@@ -1,20 +1,17 @@
 <script setup>
 import FlowbiteLayout from '@/Layouts/FlowbiteLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import {Link} from '@inertiajs/vue3';
 
 const props = defineProps({
-    app_user:{
+    perkara_pihak:{
         type:Object
     },
-    perkara_mediasi:{
+    a:{
         type:Object
-    },
-    current_user:{
-        type:Number
-    },
+    }
 });
-console.log(props.perkara_mediasi)
-console.log(props.current_user)
+console.log(props.perkara_pihak)
 </script>
 
 <template>
@@ -28,7 +25,32 @@ console.log(props.current_user)
         </template>
 
         <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
-            <p>Menampilkan jenis perkara mediasi</p>
+            <p>Detail perkara</p>
+            <div class="relative overflow-x-auto">
+                <table class="w-full">
+                    <tbody>
+                        <tr>
+                            <th class=" text-left">Nomor perkara</th>
+                            <th class=" text-left">Tanggal pendaftaran</th>
+                            <th class=" text-left">Pihak</th>
+                            <th class=" text-left">Mediator</th>
+                        </tr>
+                        
+                        <tr v-for="perkara in props.perkara_pihak" :key="perkara.id">
+                            <td>{{ perkara.nomor_perkara }}</td>
+                            <td>{{ perkara.tgl_pendaftaran }}</td>
+                            <td>
+                                <ul class="list-item list-disc" v-for="pihak in perkara.pihaks">
+                                    <li>{{ pihak.nama }}</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <Link :href="route('home')" class="text-blue-600 dark:text-blue-500 hover:underline">Pilih</Link>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </FlowbiteLayout>
 </template>

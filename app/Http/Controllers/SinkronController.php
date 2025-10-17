@@ -39,6 +39,8 @@ class SinkronController extends Controller
                 'f.nomor_indentitas AS pihak_nik', 
                 'f.telepon', 
                 'f.alamat',
+                'f.tempat_lahir',
+                'f.tanggal_lahir',
                 'f.pekerjaan',
                 'h.mediator_id');
 
@@ -63,6 +65,8 @@ class SinkronController extends Controller
                 'g.nomor_indentitas AS pihak_nik', 
                 'g.telepon', 
                 'g.alamat', 
+                'g.tempat_lahir', 
+                'g.tanggal_lahir', 
                 'g.pekerjaan', 
                 'h.mediator_id');
 

@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
         $user_apps = $user->apps->unique('slug')->select('id','name')->values();
 
         $request->session()->regenerate();
-        
+
         if($user_apps->count() > 1 || $user_apps->count() == 0 ){
 
             return redirect()->intended(route('dashboard', absolute: false)); //diarahkan ke halaman etalase aplikasi

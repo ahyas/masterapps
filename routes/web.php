@@ -185,14 +185,15 @@ Route::middleware('auth')->group(function () {
                 
             $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->get();
         $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
-
+        
+        //get perkara and its users/pihak
         $perkara = Perkara::with('pihaks')->get();
 
         return response()->json([
             'count'=>$union->count(),
             'app' => $user->uniqueApps()->pluck('name'),
             'app2' => $user->app_names,
-            'perkara' => $union
+            'perkara' => $perkara
         ]);
         
     });
