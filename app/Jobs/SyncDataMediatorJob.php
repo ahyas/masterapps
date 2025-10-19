@@ -13,16 +13,19 @@ use Illuminate\Support\Facades\Hash;
 
 class SyncDataMediatorJob implements ShouldQueue
 {
-        use Queueable, Dispatchable, InteractsWithQueue, SerializesModels;
-public $timeout = 300;
+    use Queueable, Dispatchable, InteractsWithQueue, SerializesModels;
+    public $timeout = 300;
 
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    protected $data_mediator;
+
+    public function __construct($data_mediator)
     {
-         
+        $this->data_mediator = $data_mediator;
     }
+
 
     /**
      * Execute the job.
@@ -32,12 +35,12 @@ public $timeout = 300;
         Log::info('Sync data SIPP has started');
 
         try {
-            $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
+            
 
-            $data_mediator->chunk(200)->each(function($chunk){
+            $this->data_mediator->chunk(200)->each(function($chunk){
                 $data = $chunk->map(function($mediator){
                     return [
-                        'id' => $mediator->id,
+                        'id' => $mediator->mediator_id,
                         'nama' => $mediator->nama_gelar,
                         'tempat_lahir' => $mediator->tempat_lahir,
                         'tgl_lahir' => $mediator->tgl_lahir == '0000-00-00' ? null : $mediator->tgl_lahir

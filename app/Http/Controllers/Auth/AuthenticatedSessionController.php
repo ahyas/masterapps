@@ -29,30 +29,22 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->authenticate();
 
-        $user = User::find(Auth::user()->id);
-        
-        //get apps acceessibility for current user
-        $user_apps = $user->apps->unique('slug')->select('id','name')->values();
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-        $request->session()->regenerate();
+        if (Auth::attempt($credentials)) {
 
-        if($user_apps->count() > 1 || $user_apps->count() == 0 ){
-
-            return redirect()->intended(route('dashboard', absolute: false)); //diarahkan ke halaman etalase aplikasi
-        }else{
-            $data = $user_apps->first();
-            $user_apps = $user?->apps->unique('slug')
-            ->select('id','route_name')
-            ->where('id', $data['id'])
-            ->first();
-
-            return redirect()->intended(route($user_apps['route_name'], ['app_id'=>$user_apps['id']])); //diarahkan ke dashboard aplikasi
-            
+            $user = User::where('email', Auth::user()->email)->first();
+            return response()->json($user);
+           
         }
+
+       
 
     }
 

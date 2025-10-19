@@ -37,11 +37,16 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
+            'user_type' => 'internal', //pegawai interal
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'status' => 1 //active user
         ]);
+
+        $user->user_id = $user->id;
+
+        $user->save();
 
         event(new Registered($user));
 

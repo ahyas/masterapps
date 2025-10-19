@@ -17,15 +17,20 @@ class MediasiController extends Controller
             return $query->where('pihaks.id', Auth::user()->id);
         })->get();
 
-        $perkara_pihak = Perkara::with('pihaks')
+        $perkara_pihak = Perkara::with(['pihaks', 'mediator'])
         ->whereHas('pihaks', function($query){
             return $query->where('pihaks.id', Auth::user()->id);
         })
         ->get();
 
+        $test = Perkara::find(22121);
+        $b = $test->mediator;
+
         return Inertia::render('Apps/Mediator/Perkara/Index', [
             'perkara_pihak' => $perkara_pihak,
-            'a' => $a
+            'a' => $a,
+            'test' => $test,
+            'b' => $b,
         ]);
     }
 }

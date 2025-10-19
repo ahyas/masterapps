@@ -19,10 +19,12 @@ class SyncAllDataJob implements ShouldQueue
      */
 
     protected $union;
+    protected $data_mediator;
 
-    public function __construct($union)
+    public function __construct($union, $data_mediator)
     {
         $this->union = $union;
+        $this->data_mediator = $data_mediator;
     }
 
     /**
@@ -31,9 +33,9 @@ class SyncAllDataJob implements ShouldQueue
     public function handle(): void
     {
         // Dispatch each sync job separately
-        SyncDataMediatorJob::dispatch();
+        SyncDataMediatorJob::dispatch($this->data_mediator);
         SyncDataPihakJob::dispatch($this->union);
-        SyncDataUser::dispatch($this->union);
+        SyncDataUser::dispatch($this->union, $this->data_mediator);
         SyncDataAppRoleUser::dispatch($this->union);
         SyncDataPerkara::dispatch($this->union);
         SyncDetailPerkara::dispatch($this->union);

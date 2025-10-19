@@ -43,33 +43,37 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('/app_master/{app_id}')->group(function(){
-        Route::get('/dashboard', function(){
-            $app_user = User::find(Auth::user()->id)
-            ->apps;
 
-            return Inertia::render('Apps/Master/Dashboard', [
-                'app_user' => $app_user,
-            ]);
-        })->name('app.master');
+        Route::group(['middleware'=>'can:akses_master'], function(){
+            Route::get('/dashboard', function(){
+                $app_user = User::find(Auth::user()->id)
+                ->apps;
 
-        Route::get('/users', [UserController::class, 'index'])->name('app.master.user');
-        Route::prefix('/privileges')->group(function(){
-            Route::get('/', [PrivilegeController::class, 'index'])->name('privileges.index');
-            Route::resource('/roles', RoleController::class);
-            Route::resource('/permissions', PermissionController::class);
-        });
-        Route::get('/apps', [AppController::class, 'index'])->name('app.master.app');
-        Route::group(['middleware' => 'can:sinkron'], function(){
-            Route::prefix('sinkron')->group(function(){
-                Route::get('/', [SinkronController::class, 'index'])->name('app.master.sinkron');
-                Route::get('/fetch_data', [SinkronController::class, 'fetch_data'])->name('app.master.fetch_data');
+                return Inertia::render('Apps/Master/Dashboard', [
+                    'app_user' => $app_user,
+                ]);
+            })->name('app.master');
+
+            Route::get('/users', [UserController::class, 'index'])->name('app.master.user');
+            Route::prefix('/privileges')->group(function(){
+                Route::get('/', [PrivilegeController::class, 'index'])->name('privileges.index');
+                Route::resource('/roles', RoleController::class);
+                Route::resource('/permissions', PermissionController::class);
+            });
+            Route::get('/apps', [AppController::class, 'index'])->name('app.master.app');
+            Route::group(['middleware' => 'can:sinkron'], function(){
+                Route::prefix('sinkron')->group(function(){
+                    Route::get('/', [SinkronController::class, 'index'])->name('app.master.sinkron');
+                    Route::get('/fetch_data', [SinkronController::class, 'fetch_data'])->name('app.master.fetch_data');
+                });
             });
         });
+
     });
 
     Route::prefix('/app_mediator/{app_id}')->group(function(){
 
-        Route::group(['middleware'=>'can:access_mediator'], function(){
+        Route::group(['middleware'=>'can:akses_mediator'], function(){
 
             Route::get('/dashboard', function($app_id){
             
@@ -102,7 +106,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('/app_bukutamu')->group(function(){
-        Route::group(['middleware'=>'can:access_bukutamu'], function(){
+        Route::group(['middleware'=>'can:akses_bukutamu'], function(){
             Route::get('/{app_id}/dashboard', function(){
                 $app_user = User::find(Auth::user()->id)
                 ->with('apps')->first();

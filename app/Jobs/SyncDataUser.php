@@ -20,10 +20,12 @@ class SyncDataUser implements ShouldQueue
      * Create a new job instance.
      */
     protected $union;
+    protected $data_mediator;
 
-    public function __construct($union)
+    public function __construct($union, $data_mediator)
     {
         $this->union = $union;
+        $this->data_mediator = $data_mediator;
     }
 
     /**
@@ -36,7 +38,8 @@ class SyncDataUser implements ShouldQueue
                 
             $data = $chunk->map(function($user){
                 return [
-                    'id' => $user->pihak_id,
+                    'user_id' => $user->pihak_id,
+                    'user_type' => 'client', //pihak/client
                     'name' => $user->pihak_nama,
                     'username' => $user->pihak_nik,
                     'email' => $user->pihak_email,
@@ -47,8 +50,28 @@ class SyncDataUser implements ShouldQueue
 
                 DB::table('users')->upsert(
                     $data,
-                    ['id'],
+                    ['user_id', 'user_type'],
                     ['name', 'username', 'email', 'password', 'status_id']
+                );
+            });
+
+            $this->data_mediator->chunk(200)->each(function($a){
+                
+            $user_mediator = $a->map(function($mediator){
+                return [
+                    'user_id' => $mediator->mediator_id,
+                    'user_type' => 'vendor', //vendor/mediator
+                    'name' => $mediator->nama_gelar,
+                    'username' => uniqid('uxser_', true).'@mediasi.online',
+                    'password' => Hash::make('mediasi'),
+                    'status_id' => 2,
+                ];
+                })->toArray();
+
+                DB::table('users')->upsert(
+                    $user_mediator,
+                    ['user_id', 'user_type'],
+                    ['name', 'username', 'password', 'status_id']
                 );
             });
 

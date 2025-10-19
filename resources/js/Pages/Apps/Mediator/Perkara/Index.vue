@@ -9,9 +9,17 @@ const props = defineProps({
     },
     a:{
         type:Object
+    },
+    test:{
+        type:Object
+    },
+    b:{
+        type:Object
     }
 });
 console.log(props.perkara_pihak)
+console.log(props.test);
+console.log(props.b);
 </script>
 
 <template>
@@ -41,11 +49,18 @@ console.log(props.perkara_pihak)
                             <td>{{ perkara.tgl_pendaftaran }}</td>
                             <td>
                                 <ul class="list-item list-disc" v-for="pihak in perkara.pihaks">
-                                    <li>{{ pihak.nama }}</li>
+                                    <li>{{ pihak.nama }} (<span class=" font-semibold" v-if="pihak.jenis_kelamin == 'L'">Laki-laki</span><span class=" font-semibold" v-else>Perempuan</span>)</li> 
                                 </ul>
                             </td>
                             <td>
-                                <Link :href="route('home')" class="text-blue-600 dark:text-blue-500 hover:underline">Pilih</Link>
+                                <span v-if="Object.keys(perkara.mediator).length == 0">
+                                    <Link :href="route('home')" class="text-blue-600 dark:text-blue-500 hover:underline">
+                                        Pilih
+                                    </Link>
+                                </span>
+                                <span v-else>
+                                    {{ perkara.mediator.nama }}
+                                </span>
                             </td>
                         </tr>
                     </tbody>

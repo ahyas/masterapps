@@ -41,6 +41,7 @@ class SinkronController extends Controller
                 'f.alamat',
                 'f.tempat_lahir',
                 'f.tanggal_lahir',
+                'f.jenis_kelamin',
                 'f.pekerjaan',
                 'h.mediator_id');
 
@@ -67,13 +68,16 @@ class SinkronController extends Controller
                 'g.alamat', 
                 'g.tempat_lahir', 
                 'g.tanggal_lahir', 
+                'g.jenis_kelamin', 
                 'g.pekerjaan', 
                 'h.mediator_id');
 
                 
             $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->get();
 
-        SyncAllDataJob::dispatch($union);
+            $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id AS mediator_id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
+
+        SyncAllDataJob::dispatch($union, $data_mediator);
 
         return response()->json(['message' => 'Sync job queued successfully!']);
     }

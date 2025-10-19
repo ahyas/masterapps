@@ -40,13 +40,14 @@ class SyncDataPihakJob implements ShouldQueue
                         'tanggal_lahir' => $pihak->tanggal_lahir == '0000-00-00' ? null : $pihak->tanggal_lahir,
                         'alamat' => $pihak->alamat,
                         'pekerjaan' => $pihak->pekerjaan,
+                        'jenis_kelamin' => $pihak->jenis_kelamin,
                     ];
                 })->toArray();
 
                 DB::connection('mediasiapp_conn')->table('pihaks')->upsert(
                     $pihak,
                     ['id'],
-                    ['nama', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'pekerjaan']
+                    ['nama', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'pekerjaan', 'jenis_kelamin']
                 );
 
             });
