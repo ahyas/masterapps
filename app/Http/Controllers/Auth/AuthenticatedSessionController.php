@@ -38,13 +38,28 @@ class AuthenticatedSessionController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            $user = User::find(Auth::user()->id);
+            
+            $user_apps = $user->apps->unique('slug')->select('id','name')->values();
 
-            $user = User::where('email', Auth::user()->email)->first();
-            return response()->json($user);
-           
+            $request->session()->regenerate();
+
+            if($user_apps->count() > 1 || $user_apps->count() == 0 ){
+                return redirect()->intended(route('dashboard', absolute: false));
+            }else{
+                $data = $user_apps->first();
+                $user_apps = $user?->apps->unique('slug')
+                ->select('id','route_name')
+                ->where('id', $data['id'])
+                ->first();
+
+                return redirect()->intended(route($user_apps['route_name'], ['app_id'=>$user_apps['id']]));
+            }
         }
 
-       
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
 
     }
 
