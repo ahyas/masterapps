@@ -11,9 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_type')->after('id')->nullable()->change();
-        });
+        Schema::connection('mediasiapp_conn')->dropIfExists('perkara_detail');
     }
 
     /**
@@ -21,7 +19,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('perkara_detail', function (Blueprint $table) {
             //
         });
     }

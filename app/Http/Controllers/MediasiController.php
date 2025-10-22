@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mediator;
 use App\Models\Perkara;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,24 +14,27 @@ use Illuminate\Support\Facades\Auth;
 class MediasiController extends Controller
 {
     public function Index(){
-        $a = Perkara::withWhereHas('pihaks', function($query){
+        if(Auth::user()->user_type == 'mediator'){
+            $mediator = Mediator::find(Auth::user()->id);
+            $data = $mediator->perkaras->load('pihaks');
+        }else{
+            $a = Perkara::withWhereHas('pihaks', function($query){
             return $query->where('pihaks.id', Auth::user()->id);
-        })->get();
+            })->get();
 
-        $perkara_pihak = Perkara::with(['pihaks', 'mediator'])
-        ->whereHas('pihaks', function($query){
-            return $query->where('pihaks.id', Auth::user()->id);
-        })
-        ->get();
+            $data = Perkara::with(['pihaks', 'mediator'])
+            ->whereHas('pihaks', function($query){
+                return $query->where('pihaks.id', Auth::user()->id);
+            })
+            ->get();   
+        }
 
         $test = Perkara::find(22121);
         $b = $test->mediator;
 
         return Inertia::render('Apps/Mediator/Perkara/Index', [
-            'perkara_pihak' => $perkara_pihak,
-            'a' => $a,
-            'test' => $test,
-            'b' => $b,
+            'data' => $data,
+            'user_type' => Auth::user()->user_type,
         ]);
     }
 }

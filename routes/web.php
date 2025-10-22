@@ -189,6 +189,24 @@ Route::middleware('auth')->group(function () {
                 
             $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->get();
         $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
+
+        $union->chunk(200)->each(function($chunk){
+
+            $detail_perkara = $chunk->map(function($detail_perkara){
+                return [
+                    'perkara_id' => $detail_perkara->perkara_id,
+                    'pihak_id' => $detail_perkara->pihak_id,
+                    'diinput_tanggal' => $detail_perkara->perkara_pihak_diinput_tanggal,
+                    'diperbaharui_tanggal' => null,
+                ];
+            })->toArray();
+
+            DB::connection('mediasiapp_conn')->table('perkara_pihak')->upsert(
+                $detail_perkara,
+                ['perkara_id', 'pihak_id'],
+                ['pihak_id', 'diinput_tanggal', 'diperbaharui_tanggal']
+            );
+        });
         
         //get perkara and its users/pihak
         $perkara = Perkara::with('pihaks')->get();

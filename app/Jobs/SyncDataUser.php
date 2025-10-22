@@ -38,8 +38,8 @@ class SyncDataUser implements ShouldQueue
                 
             $data = $chunk->map(function($user){
                 return [
-                    'user_id' => $user->pihak_id,
-                    'user_type' => 'client', //pihak/client
+                    'id' => $user->pihak_id,
+                    'user_type' => 'pihak',
                     'name' => $user->pihak_nama,
                     'username' => $user->pihak_nik,
                     'email' => $user->pihak_email,
@@ -50,8 +50,8 @@ class SyncDataUser implements ShouldQueue
 
                 DB::table('users')->upsert(
                     $data,
-                    ['user_id', 'user_type'],
-                    ['name', 'username', 'email', 'password', 'status_id']
+                    ['id'],
+                    ['user_type', 'name', 'username', 'email', 'password', 'status_id']
                 );
             });
 
@@ -59,10 +59,10 @@ class SyncDataUser implements ShouldQueue
                 
             $user_mediator = $a->map(function($mediator){
                 return [
-                    'user_id' => $mediator->mediator_id,
-                    'user_type' => 'vendor', //vendor/mediator
+                    'id' => $mediator->mediator_id,
+                    'user_type' => 'mediator',
                     'name' => $mediator->nama_gelar,
-                    'username' => uniqid('uxser_', true).'@mediasi.online',
+                    'email' => uniqid('user_', true).'@mediasi.online',
                     'password' => Hash::make('mediasi'),
                     'status_id' => 2,
                 ];
@@ -70,8 +70,8 @@ class SyncDataUser implements ShouldQueue
 
                 DB::table('users')->upsert(
                     $user_mediator,
-                    ['user_id', 'user_type'],
-                    ['name', 'username', 'password', 'status_id']
+                    ['id'],
+                    ['user_type', 'name', 'email', 'password', 'status_id']
                 );
             });
 
