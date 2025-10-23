@@ -37,12 +37,13 @@ class SyncDataUser implements ShouldQueue
             $this->union->chunk(200)->each(function($chunk){
                 
             $data = $chunk->map(function($user){
+                $email = filter_var($user->pihak_email, FILTER_VALIDATE_EMAIL);
                 return [
                     'id' => $user->pihak_id,
                     'user_type' => 'pihak',
                     'name' => $user->pihak_nama,
                     'username' => $user->pihak_nik,
-                    'email' => $user->pihak_email,
+                    'email' => filter_var($user->pihak_email, FILTER_VALIDATE_EMAIL) ? $user->pihak_email : uniqid('pihak_', true).'@mediasi.online',
                     'password' => Hash::make('mediasi'),
                     'status_id' => 2,
                 ];
@@ -62,7 +63,7 @@ class SyncDataUser implements ShouldQueue
                     'id' => $mediator->mediator_id,
                     'user_type' => 'mediator',
                     'name' => $mediator->nama_gelar,
-                    'email' => uniqid('user_', true).'@mediasi.online',
+                    'email' => uniqid('mediator_', true).'@mediasi.online',
                     'password' => Hash::make('mediasi'),
                     'status_id' => 2,
                 ];
