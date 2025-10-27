@@ -61,6 +61,30 @@ console.log('mediasi ',props.data)
                     </tbody>
                 </table>
             </div>
+            <hr/>
+            <p>Detail mediasi</p>
+            <table v-for="row in props.data">
+                <tr>
+                    <td class=" font-bold">Tanggal penetapan mediator</td>
+                    <td>:</td>
+                    <td>{{ row.mediasi.penetapan_penunjukan_mediator }}</td>
+                </tr>
+                <tr>
+                    <td class=" font-bold">Tanggal mulai mediasi</td>
+                    <td>:</td>
+                    <td>{{ row.mediasi.dimulai_mediasi }}</td>
+                </tr>
+                <tr>
+                    <td class=" font-bold">Hasil mediasi</td>
+                    <td>:</td>
+                    <td>{{ row.mediasi.hasil_mediasi }}</td>
+                </tr>
+                <tr>
+                    <td class=" font-bold">Isi kesepakatan</td>
+                    <td>:</td>
+                    <td>{{ row.mediasi.isi_kesepakatan_perdamaian }}</td>
+                </tr>
+            </table>
         </div>
     </FlowbiteLayout>
 </template>
