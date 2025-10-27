@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SyncAllDataJob;
-use App\Jobs\SyncDataSIPPJob;
-use DateTime;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class SinkronController extends Controller
@@ -27,6 +23,7 @@ class SinkronController extends Controller
             ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
             ->select(
                 'a.perkara_id', 
+                'a.mediasi_id', 
                 'b.tanggal_pendaftaran', 
                 'b.nomor_perkara', 
                 'b.diinput_tanggal AS perkara_diinput_tanggal',  
@@ -54,6 +51,7 @@ class SinkronController extends Controller
             ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
             ->select(
                 'a.perkara_id', 
+                'a.mediasi_id', 
                 'b.tanggal_pendaftaran', 
                 'b.nomor_perkara',  
                 'b.diinput_tanggal AS perkara_diinput_tanggal',  
@@ -77,7 +75,23 @@ class SinkronController extends Controller
 
             $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id AS mediator_id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
 
-        SyncAllDataJob::dispatch($union, $data_mediator);
+            $perkara_mediasi = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi AS a')
+            ->whereYear('b.tgl_pendaftaran', '>=', 2025)
+            ->join('paboyo_mediatorapp.perkaras AS b', 'a.perkara_id', 'b.id')
+            ->select(
+                'a.mediasi_id', 
+                'a.perkara_id', 
+                'a.penetapan_penunjukan_mediator',
+                'a.dimulai_mediasi',
+                'a.keputusan_mediasi',
+                'a.tgl_kesepakatan_perdamaian',
+                'a.hasil_mediasi',
+                'a.isi_kesepakatan_perdamaian',
+                'b.diinput_tgl',  
+                'b.diperbaharui_tgl')
+            ->get();
+
+        SyncAllDataJob::dispatch($union, $data_mediator, $perkara_mediasi);
 
         return response()->json(['message' => 'Sync job queued successfully!']);
     }

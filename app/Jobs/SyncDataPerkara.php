@@ -35,6 +35,7 @@ class SyncDataPerkara implements ShouldQueue
                 $perkara = $chunk->map(function($perkara){
                     return [
                         'id' => $perkara->perkara_id,
+                        'mediasi_id' => $perkara->mediasi_id,
                         'tgl_pendaftaran' => $perkara->tanggal_pendaftaran,
                         'nomor_perkara' => $perkara->nomor_perkara,
                         'mediator_id' => $perkara->mediator_id,
@@ -46,7 +47,7 @@ class SyncDataPerkara implements ShouldQueue
                 DB::connection('mediasiapp_conn')->table('perkaras')->upsert(
                     $perkara,
                     ['id'],
-                    ['tgl_pendaftaran', 'nomor_perkara', 'mediator_id','diinput_tgl', 'diperbaharui_tgl']
+                    ['tgl_pendaftaran', 'nomor_perkara', 'mediator_id','mediasi_id','diinput_tgl', 'diperbaharui_tgl']
                 );
             });
 

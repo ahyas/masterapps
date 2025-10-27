@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mediasi;
 use App\Models\Mediator;
 use App\Models\Perkara;
 use App\Models\User;
@@ -22,7 +23,7 @@ class MediasiController extends Controller
             return $query->where('pihaks.id', Auth::user()->id);
             })->get();
 
-            $data = Perkara::with(['pihaks', 'mediator'])
+            $data = Perkara::with(['pihaks', 'mediator', 'mediasi'])
             ->whereHas('pihaks', function($query){
                 return $query->where('pihaks.id', Auth::user()->id);
             })
@@ -30,11 +31,14 @@ class MediasiController extends Controller
         }
 
         $test = Perkara::find(22121);
+        $test2 = Perkara::find(22059);
         $b = $test->mediator;
+        $mediasi = $test2->mediasi;
 
         return Inertia::render('Apps/Mediator/Perkara/Index', [
             'data' => $data,
             'user_type' => Auth::user()->user_type,
+            'mediasi' => $mediasi,
         ]);
     }
 }

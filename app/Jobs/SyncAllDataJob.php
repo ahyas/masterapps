@@ -20,11 +20,13 @@ class SyncAllDataJob implements ShouldQueue
 
     protected $union;
     protected $data_mediator;
+    protected $perkara_mediasi;
 
-    public function __construct($union, $data_mediator)
+    public function __construct($union, $data_mediator, $perkara_mediasi)
     {
         $this->union = $union;
         $this->data_mediator = $data_mediator;
+        $this->perkara_mediasi = $perkara_mediasi;
     }
 
     /**
@@ -39,5 +41,6 @@ class SyncAllDataJob implements ShouldQueue
         SyncDataAppRoleUser::dispatch($this->union, $this->data_mediator);
         SyncDataPerkara::dispatch($this->union);
         SyncDetailPerkara::dispatch($this->union);
+        SyncPerkaraMediasi::dispatch($this->perkara_mediasi);
     }
 }

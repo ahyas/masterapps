@@ -19,4 +19,8 @@ class Perkara extends Model
     public function mediator():BelongsTo{
         return $this->belongsTo(Mediator::class);
     }
+
+    public function mediasi():BelongsTo{
+        return $this->belongsTo(Mediasi::class);
+    }
 }

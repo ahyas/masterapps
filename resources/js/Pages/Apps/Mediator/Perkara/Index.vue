@@ -10,10 +10,11 @@ const props = defineProps({
     user_type:{
         type:String
     },
+    mediasi:{
+        type:Object
+    },
 });
-console.log(props.data)
-console.log(props.user_type)
-console.log(props.isMediator)
+console.log('mediasi ',props.data)
 </script>
 
 <template>

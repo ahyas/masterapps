@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -32,13 +33,20 @@ class AuthenticatedSessionController extends Controller
     public function store(Request $request)
     {
 
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
+        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        $request->validate([
+            'login' => 'required|string',
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $user = User::find(Auth::user()->id);
+        if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password], $request->boolean('remember')))  {
+             return back()->withErrors([
+                'login' => 'The provided credentials do not match our records.',
+            ])->onlyInput('login');
+        }
+
+        $user = User::find(Auth::user()->id);
             
             $user_apps = $user->apps->unique('slug')->select('id','name')->values();
 
@@ -55,11 +63,7 @@ class AuthenticatedSessionController extends Controller
 
                 return redirect()->intended(route($user_apps['route_name'], ['app_id'=>$user_apps['id']]));
             }
-        }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
 
     }
 

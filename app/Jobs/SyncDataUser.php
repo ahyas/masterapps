@@ -37,7 +37,7 @@ class SyncDataUser implements ShouldQueue
             $this->union->chunk(200)->each(function($chunk){
                 
             $data = $chunk->map(function($user){
-                $email = filter_var($user->pihak_email, FILTER_VALIDATE_EMAIL);
+                
                 return [
                     'id' => $user->pihak_id,
                     'user_type' => 'pihak',

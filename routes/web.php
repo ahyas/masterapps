@@ -8,6 +8,7 @@ use App\Http\Controllers\PrivilegeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SinkronController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ValidasiAkunController;
 use App\Models\App;
@@ -119,6 +120,8 @@ Route::middleware('auth')->group(function () {
 
     });
 
+    Route::get('/test_view', [TestController::class, 'index']);
+
     Route::get('/test', function(){
         $user = User::find(Auth::user()->id);
         $app = App::all();
@@ -147,6 +150,13 @@ Route::middleware('auth')->group(function () {
             ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
             ->select(
                 'a.perkara_id', 
+                'a.mediasi_id', 
+                'a.penetapan_penunjukan_mediator',
+                'a.dimulai_mediasi',
+                'a.keputusan_mediasi',
+                'a.tgl_kesepakatan_perdamaian',
+                'a.hasil_mediasi',
+                'a.isi_kesepakatan_perdamaian',
                 'b.tanggal_pendaftaran', 
                 'b.nomor_perkara', 
                 'b.diinput_tanggal AS perkara_diinput_tanggal',  
@@ -171,6 +181,13 @@ Route::middleware('auth')->group(function () {
             ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
             ->select(
                 'a.perkara_id', 
+                'a.mediasi_id', 
+                'a.penetapan_penunjukan_mediator',
+                'a.dimulai_mediasi',
+                'a.keputusan_mediasi',
+                'a.tgl_kesepakatan_perdamaian',
+                'a.hasil_mediasi',
+                'a.isi_kesepakatan_perdamaian',
                 'b.tanggal_pendaftaran', 
                 'b.nomor_perkara',  
                 'b.diinput_tanggal AS perkara_diinput_tanggal',  
@@ -190,32 +207,32 @@ Route::middleware('auth')->group(function () {
             $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->get();
         $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
 
-        $union->chunk(200)->each(function($chunk){
-
-            $detail_perkara = $chunk->map(function($detail_perkara){
-                return [
-                    'perkara_id' => $detail_perkara->perkara_id,
-                    'pihak_id' => $detail_perkara->pihak_id,
-                    'diinput_tanggal' => $detail_perkara->perkara_pihak_diinput_tanggal,
-                    'diperbaharui_tanggal' => null,
-                ];
-            })->toArray();
-
-            DB::connection('mediasiapp_conn')->table('perkara_pihak')->upsert(
-                $detail_perkara,
-                ['perkara_id', 'pihak_id'],
-                ['pihak_id', 'diinput_tanggal', 'diperbaharui_tanggal']
-            );
-        });
+        $perkara_mediasi = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi AS a')
+            ->whereYear('b.tgl_pendaftaran', '>=', 2025)
+            ->join('paboyo_mediatorapp.perkaras AS b', 'a.perkara_id', 'b.id')
+            ->select(
+                'a.mediasi_id', 
+                'a.perkara_id', 
+                'a.penetapan_penunjukan_mediator',
+                'a.dimulai_mediasi',
+                'a.keputusan_mediasi',
+                'a.tgl_kesepakatan_perdamaian',
+                'a.hasil_mediasi',
+                'a.isi_kesepakatan_perdamaian',
+                'b.diinput_tgl',  
+                'b.diperbaharui_tgl')
+            ->get();
         
         //get perkara and its users/pihak
         $perkara = Perkara::with('pihaks')->get();
 
+        $perkaras = DB::connection('mediasiapp_conn')->table('perkaras')
+        ->get();
+
         return response()->json([
-            'count'=>$union->count(),
-            'app' => $user->uniqueApps()->pluck('name'),
-            'app2' => $user->app_names,
-            'perkara' => $perkara
+            'perkara_mediasi_count' => $perkara_mediasi->count(),
+            'perkaras' => $perkaras->count(),
+            'perkara_mediasi' => $perkara_mediasi,
         ]);
         
     });
