@@ -76,8 +76,7 @@ class SinkronController extends Controller
             $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id AS mediator_id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
 
             $perkara_mediasi = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi AS a')
-            ->whereYear('b.tgl_pendaftaran', '>=', 2025)
-            ->join('paboyo_mediatorapp.perkaras AS b', 'a.perkara_id', 'b.id')
+            ->whereYear('a.diinput_tanggal', '>=', 2025)
             ->select(
                 'a.mediasi_id', 
                 'a.perkara_id', 
@@ -87,8 +86,8 @@ class SinkronController extends Controller
                 'a.tgl_kesepakatan_perdamaian',
                 'a.hasil_mediasi',
                 'a.isi_kesepakatan_perdamaian',
-                'b.diinput_tgl',  
-                'b.diperbaharui_tgl')
+                'a.diinput_tanggal',  
+                'a.diperbaharui_tanggal')
             ->get();
 
         SyncAllDataJob::dispatch($union, $data_mediator, $perkara_mediasi);

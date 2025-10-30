@@ -28,7 +28,7 @@ console.log('mediasi ',props.data)
         </template>
 
         <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
-            <p>Detail perkara</p>
+            <p><u>Detail perkara :</u></p>
             <div class="relative overflow-x-auto">
                 <table class="w-full">
                     <tbody>
@@ -62,8 +62,9 @@ console.log('mediasi ',props.data)
                 </table>
             </div>
             <hr/>
-            <p>Detail mediasi</p>
+            <p><u>Detail mediasi :</u></p>
             <table v-for="row in props.data">
+                <div v-if="row.mediasi">
                 <tr>
                     <td class=" font-bold">Tanggal penetapan mediator</td>
                     <td>:</td>
@@ -84,6 +85,7 @@ console.log('mediasi ',props.data)
                     <td>:</td>
                     <td>{{ row.mediasi.isi_kesepakatan_perdamaian }}</td>
                 </tr>
+                </div>
             </table>
         </div>
     </FlowbiteLayout>

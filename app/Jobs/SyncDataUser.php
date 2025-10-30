@@ -37,13 +37,13 @@ class SyncDataUser implements ShouldQueue
             $this->union->chunk(200)->each(function($chunk){
                 
             $data = $chunk->map(function($user){
-                
+                $custom_username = $user->pihak_nik == null && $user->pihak_email == null ? 'user'.rand() : $user->pihak_nik;                 
                 return [
                     'id' => $user->pihak_id,
                     'user_type' => 'pihak',
                     'name' => $user->pihak_nama,
-                    'username' => $user->pihak_nik,
-                    'email' => filter_var($user->pihak_email, FILTER_VALIDATE_EMAIL) ? $user->pihak_email : uniqid('pihak_', true).'@mediasi.online',
+                    'username' => $custom_username,
+                    'email' => filter_var($user->pihak_email, FILTER_VALIDATE_EMAIL) ? $user->pihak_email : NULL,
                     'password' => Hash::make('mediasi'),
                     'status_id' => 2,
                 ];
@@ -63,7 +63,8 @@ class SyncDataUser implements ShouldQueue
                     'id' => $mediator->mediator_id,
                     'user_type' => 'mediator',
                     'name' => $mediator->nama_gelar,
-                    'email' => uniqid('mediator_', true).'@mediasi.online',
+                    'username' => 'user'.rand(),
+                    'email' => null,
                     'password' => Hash::make('mediasi'),
                     'status_id' => 2,
                 ];
@@ -72,7 +73,7 @@ class SyncDataUser implements ShouldQueue
                 DB::table('users')->upsert(
                     $user_mediator,
                     ['id'],
-                    ['user_type', 'name', 'email', 'password', 'status_id']
+                    ['user_type', 'name','username', 'email', 'password', 'status_id']
                 );
             });
 

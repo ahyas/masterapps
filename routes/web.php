@@ -128,8 +128,7 @@ Route::middleware('auth')->group(function () {
         
         //get apps access for current user
         $user_apps = $user->apps->unique('slug')->select('id','name', 'route_name')->values();
-        $route_name = $user_apps->first();
-        $asd = $route_name['route_name'];
+        
         
         //display apps roles and permission (for super admin)
         $app_role = $app->load('roles');
@@ -226,12 +225,14 @@ Route::middleware('auth')->group(function () {
         //get perkara and its users/pihak
         $perkara = Perkara::with('pihaks')->get();
 
+
         $perkaras = DB::connection('mediasiapp_conn')->table('perkaras')
         ->get();
 
         return response()->json([
             'perkara_mediasi_count' => $perkara_mediasi->count(),
             'perkaras' => $perkaras->count(),
+            'union' => $union,
             'perkara_mediasi' => $perkara_mediasi,
         ]);
         

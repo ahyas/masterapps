@@ -39,8 +39,8 @@ class SyncAllDataJob implements ShouldQueue
         SyncDataPihakJob::dispatch($this->union);
         SyncDataUser::dispatch($this->union, $this->data_mediator);
         SyncDataAppRoleUser::dispatch($this->union, $this->data_mediator);
+        SyncPerkaraMediasi::dispatch($this->perkara_mediasi);
         SyncDataPerkara::dispatch($this->union);
         SyncDetailPerkara::dispatch($this->union);
-        SyncPerkaraMediasi::dispatch($this->perkara_mediasi);
     }
 }

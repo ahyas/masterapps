@@ -52,7 +52,7 @@ class SyncDataAppRoleUser implements ShouldQueue
 
             $this->data_mediator->chunk(200)->each(function($a){
                 
-            $user_mediator = $a->map(function($mediator){
+                $user_mediator = $a->map(function($mediator){
                 return [
                     'app_id' => 1,
                     'role_id' => 3,
