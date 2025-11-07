@@ -6,6 +6,7 @@ use App\Http\Controllers\PerkaraController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PrivilegeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SinkronController;
 use App\Http\Controllers\TestController;
@@ -92,6 +93,10 @@ Route::middleware('auth')->group(function () {
 
             Route::group(['middleware' => 'can:manage_mediasi'], function(){
                 Route::get('/mediasi', [MediasiController::class, 'index'])->name('mediasi.index');
+
+                Route::get('/mediasi/{perkara_id}/penilaian/create', [ReviewController::class, 'create'])->name('mediasi.penilaian.create')->middleware('can:menilai_mediator');
+
+                Route::post('/mediasi/{perkara_id}/penilaian/store', [ReviewController::class, 'store'])->name('mediasi.penilaian.store');
             });
 
             Route::group(['middleware' => 'can:validasi_akun'], function(){

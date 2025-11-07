@@ -22,7 +22,7 @@ const props = defineProps({
 
         <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
             <p>Selamat datang <span class=" font-semibold">{{ $page.props.auth.user.name }}</span>. Anda sedang mengakses aplikasi sebagai 
-                <span v-for="role in $page.props.auth.permissions" class=" font-bold">{{ role.name }} </span>
+                <span v-for="role in $page.props.auth.permissions" class=" font-bold">{{ role.information }} </span>
             </p>
         </div>
     </FlowbiteLayout>

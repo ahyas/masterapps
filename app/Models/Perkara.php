@@ -23,4 +23,9 @@ class Perkara extends Model
     public function mediasi():BelongsTo{
         return $this->belongsTo(Mediasi::class);
     }
+
+    //dinilai oleh pihak 1 dan/atau pihak 2
+    public function reviews(){ 
+        return $this->hasMany(Review::class);
+    }
 }

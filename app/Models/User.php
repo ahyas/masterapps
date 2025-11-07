@@ -87,4 +87,8 @@ class User extends Authenticatable
                     ->distinct();
     }
 
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
+
 }

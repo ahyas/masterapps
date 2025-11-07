@@ -1,7 +1,8 @@
 <script setup>
 import FlowbiteLayout from '@/Layouts/FlowbiteLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import {Link} from '@inertiajs/vue3';
+import DataMediasi from './Partials/DataMediasi.vue';
 
 const props = defineProps({
     data:{
@@ -13,8 +14,12 @@ const props = defineProps({
     mediasi:{
         type:Object
     },
+    review:{
+        type:Object
+    },
 });
-console.log('mediasi ',props.data)
+console.log('data ',props.data)
+console.log('can ',usePage().props.auth.can)
 </script>
 
 <template>
@@ -37,6 +42,7 @@ console.log('mediasi ',props.data)
                             <th class=" text-left">Tanggal pendaftaran</th>
                             <th class=" text-left">Pihak</th>
                             <th v-if="props.user_type == 'pihak'" class=" text-left">Mediator</th>
+                            <th></th>
                         </tr>
                         
                         <tr v-for="perkara in props.data" :key="perkara.id">
@@ -57,36 +63,22 @@ console.log('mediasi ',props.data)
                                     {{ perkara.mediator.nama }}
                                 </span>
                             </td>
+                            <td>
+                                <Link v-if="$page.props.auth.can.menilai_mediator" :href="route('mediasi.penilaian.create', {app_id:$page.props.auth.app_id, perkara_id:perkara.id})" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-4">Review</Link>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <hr/>
-            <p><u>Detail mediasi :</u></p>
-            <table v-for="row in props.data">
-                <div v-if="row.mediasi">
-                <tr>
-                    <td class=" font-bold">Tanggal penetapan mediator</td>
-                    <td>:</td>
-                    <td>{{ row.mediasi.penetapan_penunjukan_mediator }}</td>
+            
+            <table v-for="row in props.data" :key="row.id" class="mb-4">
+                <DataMediasi v-if="row.mediasi" :mediasi="row.mediasi"/>
+                <tr v-else>
+                    <td colspan="3">Tidak ada data ditampilkan</td>
                 </tr>
-                <tr>
-                    <td class=" font-bold">Tanggal mulai mediasi</td>
-                    <td>:</td>
-                    <td>{{ row.mediasi.dimulai_mediasi }}</td>
-                </tr>
-                <tr>
-                    <td class=" font-bold">Hasil mediasi</td>
-                    <td>:</td>
-                    <td>{{ row.mediasi.hasil_mediasi }}</td>
-                </tr>
-                <tr>
-                    <td class=" font-bold">Isi kesepakatan</td>
-                    <td>:</td>
-                    <td>{{ row.mediasi.isi_kesepakatan_perdamaian }}</td>
-                </tr>
-                </div>
             </table>
+            
         </div>
     </FlowbiteLayout>
 </template>
