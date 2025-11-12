@@ -17,29 +17,32 @@ class MediasiController extends Controller
     public function Index():Response{
         if(Auth::user()->user_type == 'mediator'){
             $mediator = Mediator::find(Auth::user()->id);
-            $data = $mediator->perkaras->load('pihaks');
+            $data = $mediator->perkaras()->with(['pihaks', 'reviews'])->get();
+
+            $reviews = $mediator->load('reviews');
         }else{
-            $a = Perkara::withWhereHas('pihaks', function($query){
-            return $query->where('pihaks.id', Auth::user()->id);
-            })->get();
 
             $data = Perkara::with(['pihaks', 'mediator', 'mediasi', 'reviews'])
             ->whereHas('pihaks', function($query){
                 return $query->where('pihaks.id', Auth::user()->id);
             })
-            ->get();   
-        }
+            ->get();
 
-        $test = Perkara::find(22121);
-        $test2 = Perkara::find(22059);
-        $b = $test->mediator;
-        $mediasi = $test2->mediasi;
+            $perkara_pihak = Perkara::withWhereHas('pihaks', function($query){
+                return $query->where('pihaks.id', Auth::user()->id);
+            })->first();
+
+            $mediator = $perkara_pihak->load('mediator');
+
+            $reviews = $perkara_pihak->reviews()->where('user_id', Auth::user()->id)->first();
+
+        }
 
         return Inertia::render('Apps/Mediator/Perkara/Index', [
             'data' => $data,
             'user_type' => Auth::user()->user_type,
-            'mediasi' => $mediasi,
-            'review' => $test->load(['mediator', 'reviews']),
+            'review' => $reviews,
+            'mediator' => $mediator
         ]);
     }
 

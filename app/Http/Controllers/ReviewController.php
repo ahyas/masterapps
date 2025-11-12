@@ -28,11 +28,16 @@ class ReviewController extends Controller
 
         $perkara = Perkara::find($perkara_id);
 
-        $perkara->reviews()->create([
-            'mediator_id' => $request->mediator_id,
-            'user_id' => Auth::user()->id,
-            'rating' => $validated['rating'],
-            'testimony' => $validated['testimony'] ?? null,
+        $perkara->reviews()->updateOrCreate(
+            [
+                'perkara_id' =>$perkara_id, 
+                'mediator_id' => $request->mediator_id, 
+                'user_id' => Auth::user()->id
+            ],
+            [
+                'rating' => $validated['rating'],
+                'testimony' => $validated['testimony'
+            ] ?? null,
         ]);
 
         return redirect()->route('mediasi.index', ['app_id' => $app_id]);
