@@ -17,7 +17,7 @@ const props = defineProps({
                 <th class=" text-left">Nomor perkara</th>
                 <th class=" text-left">Tanggal pendaftaran</th>
                 <th class=" text-left">Pihak</th>
-                <th v-if="props.user_type == 'pihak'" class=" text-left">Mediator</th>
+                <!--<th v-if="props.user_type == 'pihak'" class=" text-left">Mediator</th>-->
             </tr>
             
             <tr v-for="perkara in props.data" :key="perkara.id">
@@ -36,7 +36,7 @@ const props = defineProps({
                         </li> 
                     </ul>
                 </td>
-                <td v-if="'mediator' in perkara">
+                <!--<td v-if="'mediator' in perkara">
                     <span v-if="Object.keys(perkara.mediator).length == 0">
                         <Link :href="route('home')" class="text-blue-600 dark:text-blue-500 hover:underline">
                             Pilih
@@ -45,7 +45,7 @@ const props = defineProps({
                     <span v-else>
                         {{ perkara.mediator.nama }}
                     </span>
-                </td>
+                </td>-->
             </tr>
         </tbody>
     </table>

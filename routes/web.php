@@ -142,8 +142,6 @@ Route::middleware('auth')->group(function () {
         $roles_mediator_app = $user->rolesForApp(1)->load('permissions');
         $roles_bukutamu_app = $user->rolesForApp(2)->load('permissions');
 
-        $can = Auth::user()->can('memilih_mediator');
-
         $mediasi_pihak1 = DB::connection('paboyo_sync_sipp')
             ->table('perkara_mediasi AS a')
             ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
