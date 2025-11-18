@@ -28,9 +28,9 @@ const props = defineProps({
                         <li >
                             {{ pihak.nama }}<br></br> <!--(<span class=" font-semibold" v-if="pihak.jenis_kelamin == 'L'">Laki-laki</span><span class=" font-semibold" v-else>Perempuan</span>)-->
                             <span v-if="$page.props.auth.can.melihat_detail_review" v-for="review in perkara.reviews" :key="review.id">
-                                <span v-if="pihak.id == review.user_id" class=" text-green-800">
-                                    <span><b>Rating :</b> {{ review.rating }} dari 5</span><br>
-                                    <span><b>Testimony :</b> {{ review.testimony }}</span>
+                                <span v-if="pihak.id == review.user_id">
+                                    <span :class="review.rating <= 3 ? 'text-red-700' : 'text-blue-800'"><b>Rating :</b> {{ review.rating }} dari 5<br>
+                                    <b>Testimony :</b> {{ review.testimony }}</span>
                                 </span>
                             </span>
                         </li> 

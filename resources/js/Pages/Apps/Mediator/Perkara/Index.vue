@@ -6,6 +6,7 @@ import DataPerkara from './Partials/DataPerkara.vue';
 import EmptyData from './Partials/EmptyData.vue';
 import Review from './Partials/Review.vue';
 import Mediator from './Partials/Mediator.vue';
+import AverageReview from './Partials/AverageReview.vue';
 
 const props = defineProps({
     data:{
@@ -35,9 +36,7 @@ console.log('mediator ', props.mediator);
 
     <FlowbiteLayout>
         <template #header>
-            <div class="p-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-                <span class="font-medium">Success alert!</span> Change a few things up and try submitting again.
-            </div>
+            <AverageReview v-if="$page.props.auth.can.melihat_average_review && props.review.reviews.length" :review="props.review.reviews" />
         </template>
 
         <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
