@@ -13,65 +13,123 @@ class SinkronController extends Controller
     }
 
     public function fetch_data($app_id){
-        $mediasi_pihak1 = DB::connection('paboyo_sync_sipp')
-            ->table('perkara_mediasi AS a')
-            ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
-            ->join('perkara AS b', 'a.perkara_id', 'b.perkara_id')
-            ->join('mediator AS c', 'a.mediator_id', 'c.id')
-            ->join('perkara_pihak1 AS d', 'a.perkara_id', 'd.perkara_id')
-            ->join('pihak AS f', 'd.pihak_id', 'f.id')
-            ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
-            ->select(
-                'a.perkara_id', 
-                'a.mediasi_id', 
-                'b.tanggal_pendaftaran', 
-                'b.nomor_perkara', 
-                'b.diinput_tanggal AS perkara_diinput_tanggal',  
-                'b.diperbaharui_tanggal AS perkara_diperbaharui_tanggal',
-                'f.id AS pihak_id', 
-                'd.nama AS pihak_nama', 
-                'd.diinput_tanggal AS perkara_pihak_diinput_tanggal', 
-                'd.diperbaharui_tanggal AS perkara_pihak_diperbaharui_tanggal',
-                'f.email AS pihak_email', 
-                'f.nomor_indentitas AS pihak_nik', 
-                'f.telepon', 
-                'f.alamat',
-                'f.tempat_lahir',
-                'f.tanggal_lahir',
-                'f.jenis_kelamin',
-                'f.pekerjaan',
-                'h.mediator_id');
+        // $mediasi_pihak1 = DB::connection('paboyo_sync_sipp')
+        //     ->table('perkara_mediasi AS a')
+        //     ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
+        //     ->join('perkara AS b', 'a.perkara_id', 'b.perkara_id')
+        //     ->join('mediator AS c', 'a.mediator_id', 'c.id')
+        //     ->join('perkara_pihak1 AS d', 'a.perkara_id', 'd.perkara_id')
+        //     ->join('pihak AS f', 'd.pihak_id', 'f.id')
+        //     ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
+        //     ->select(
+        //         'a.perkara_id', 
+        //         'a.mediasi_id', 
+        //         'b.tanggal_pendaftaran', 
+        //         'b.nomor_perkara', 
+        //         'b.diinput_tanggal AS perkara_diinput_tanggal',  
+        //         'b.diperbaharui_tanggal AS perkara_diperbaharui_tanggal',
+        //         'f.id AS pihak_id', 
+        //         'd.nama AS pihak_nama', 
+        //         'd.diinput_tanggal AS perkara_pihak_diinput_tanggal', 
+        //         'd.diperbaharui_tanggal AS perkara_pihak_diperbaharui_tanggal',
+        //         'f.email AS pihak_email', 
+        //         'f.nomor_indentitas AS pihak_nik', 
+        //         'f.telepon', 
+        //         'f.alamat',
+        //         'f.tempat_lahir',
+        //         'f.tanggal_lahir',
+        //         'f.jenis_kelamin',
+        //         'f.pekerjaan',
+        //         'h.mediator_id');
 
-            $mediasi_pihak2 = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi AS a')
-            ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
-            ->join('perkara AS b', 'a.perkara_id', 'b.perkara_id')
-            ->join('mediator AS c', 'a.mediator_id', 'c.id')
-            ->join('perkara_pihak2 AS e', 'a.perkara_id', 'e.perkara_id')
-            ->join('pihak AS g', 'e.pihak_id', 'g.id')
-            ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
-            ->select(
-                'a.perkara_id', 
-                'a.mediasi_id', 
-                'b.tanggal_pendaftaran', 
-                'b.nomor_perkara',  
-                'b.diinput_tanggal AS perkara_diinput_tanggal',  
-                'b.diperbaharui_tanggal AS perkara_diperbaharui_tanggal',  
-                'g.id AS pihak_id', 
-                'e.nama AS pihak_nama', 
-                'e.diinput_tanggal AS perkara_pihak_diinput_tanggal', 
-                'e.diperbaharui_tanggal AS perkara_pihak_diperbaharui_tanggal', 
-                'g.email AS pihak_email', 
-                'g.nomor_indentitas AS pihak_nik', 
-                'g.telepon', 
-                'g.alamat', 
-                'g.tempat_lahir', 
-                'g.tanggal_lahir', 
-                'g.jenis_kelamin', 
-                'g.pekerjaan', 
-                'h.mediator_id');
+        //     $mediasi_pihak2 = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi AS a')
+        //     ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
+        //     ->join('perkara AS b', 'a.perkara_id', 'b.perkara_id')
+        //     ->join('mediator AS c', 'a.mediator_id', 'c.id')
+        //     ->join('perkara_pihak2 AS e', 'a.perkara_id', 'e.perkara_id')
+        //     ->join('pihak AS g', 'e.pihak_id', 'g.id')
+        //     ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
+        //     ->select(
+        //         'a.perkara_id', 
+        //         'a.mediasi_id', 
+        //         'b.tanggal_pendaftaran', 
+        //         'b.nomor_perkara',  
+        //         'b.diinput_tanggal AS perkara_diinput_tanggal',  
+        //         'b.diperbaharui_tanggal AS perkara_diperbaharui_tanggal',  
+        //         'g.id AS pihak_id', 
+        //         'e.nama AS pihak_nama', 
+        //         'e.diinput_tanggal AS perkara_pihak_diinput_tanggal', 
+        //         'e.diperbaharui_tanggal AS perkara_pihak_diperbaharui_tanggal', 
+        //         'g.email AS pihak_email', 
+        //         'g.nomor_indentitas AS pihak_nik', 
+        //         'g.telepon', 
+        //         'g.alamat', 
+        //         'g.tempat_lahir', 
+        //         'g.tanggal_lahir', 
+        //         'g.jenis_kelamin', 
+        //         'g.pekerjaan', 
+        //         'h.mediator_id');
 
                 
+        //     $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->get();
+
+            //start: tarik seluruh data perkara, bukan hanya perkara mediasi
+            $mediasi_pihak1 = DB::connection('paboyo_sync_sipp')->table('perkara AS b')
+            ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
+            ->leftJoin('perkara_mediasi AS a', 'b.perkara_id', 'a.perkara_id')
+            ->leftJoin('mediator AS c', 'a.mediator_id', 'c.id')
+            ->join('perkara_pihak1 AS d', 'b.perkara_id', 'd.perkara_id')
+            ->join('pihak AS e', 'd.pihak_id', 'e.id')
+            ->leftJoin('perkara_mediator AS h', 'b.perkara_id', 'h.perkara_id')
+            ->select(
+                'b.perkara_id', //ok
+                'a.mediasi_id', //ok
+                'b.tanggal_pendaftaran', //ok
+                'b.nomor_perkara', //ok
+                'b.diinput_tanggal AS perkara_diinput_tanggal',  //ok
+                'e.id AS pihak_id', //ok
+                'd.nama AS pihak_nama', //ok
+                'd.diinput_tanggal AS perkara_pihak_diinput_tanggal', //ok
+                'd.diperbaharui_tanggal AS perkara_diperbaharui_tanggal', //ok
+                'e.email AS pihak_email', //ok
+                'e.nomor_indentitas AS pihak_nik', //ok
+                'e.alamat', //ok
+                'e.tempat_lahir', //ok
+                'e.tanggal_lahir', //ok
+                'e.jenis_kelamin', //ok
+                'e.pekerjaan', //ok
+                'h.mediator_id' //ok
+            );
+
+            $mediasi_pihak2 = DB::connection('paboyo_sync_sipp')->table('perkara AS b')
+            ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
+            ->leftJoin('perkara_mediasi AS a', 'b.perkara_id', 'a.perkara_id')
+            ->leftJoin('mediator AS c', 'a.mediator_id', 'c.id')
+            ->join('perkara_pihak2 AS d', 'b.perkara_id', 'd.perkara_id')
+            ->join('pihak AS e', 'd.pihak_id', 'e.id')
+            ->leftJoin('perkara_mediator AS h', 'b.perkara_id', 'h.perkara_id')
+            ->select(
+                'b.perkara_id', //ok
+                'a.mediasi_id', //ok
+                'b.tanggal_pendaftaran', //ok
+                'b.nomor_perkara', //ok
+                'b.diinput_tanggal AS perkara_diinput_tanggal',  //ok
+                'e.id AS pihak_id', //ok
+                'd.nama AS pihak_nama', //ok
+                'd.diinput_tanggal AS perkara_pihak_diinput_tanggal', //ok
+                'd.diperbaharui_tanggal AS perkara_diperbaharui_tanggal', //ok
+                'e.email AS pihak_email', //ok
+                'e.nomor_indentitas AS pihak_nik', //ok
+                'e.alamat', //ok
+                'e.tempat_lahir', //ok
+                'e.tanggal_lahir', //ok
+                'e.jenis_kelamin', //ok
+                'e.pekerjaan', //ok
+                'h.mediator_id' //ok
+            );
+                
             $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->get();
+            //end: tarik seluruh data perkara, bukan hanya perkara mediasi
 
             $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id AS mediator_id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
 

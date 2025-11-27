@@ -18,11 +18,11 @@ class SyncPerkaraMediasi implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    protected $union;
+    protected $perkara_mediasi;
 
-    public function __construct($union)
+    public function __construct($perkara_mediasi)
     {
-        $this->union = $union;
+        $this->perkara_mediasi = $perkara_mediasi;
     }
 
     /**
@@ -30,7 +30,7 @@ class SyncPerkaraMediasi implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->union->chunk(200)->each(function($chunk){
+        $this->perkara_mediasi->chunk(200)->each(function($chunk){
 
             $data = $chunk->map(function($perkara_mediasi){
                 return [

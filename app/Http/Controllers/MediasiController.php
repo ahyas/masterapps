@@ -26,7 +26,7 @@ class MediasiController extends Controller
             ->whereHas('pihaks', function($query){
                 return $query->where('pihaks.id', Auth::user()->id);
             })
-            ->get();
+            ->first();
 
             $perkara_pihak = Perkara::withWhereHas('pihaks', function($query){
                 return $query->where('pihaks.id', Auth::user()->id);
@@ -54,5 +54,22 @@ class MediasiController extends Controller
 
     public function createPenilaian($app_id, $mediator_id){
         return response()->json($mediator_id);
+    }
+
+    public function show_mediator($app_id, $perkara_id){
+        $mediator = Mediator::all();
+
+        return Inertia::render('Apps/Mediator/DaftarMediator', [
+            'mediator' => $mediator,
+            'perkara_id' => $perkara_id,
+        ]);
+    }
+
+    public function detail_mediator($app_id, $perkara_id, $mediator_id){
+        $mediator = Mediator::find($mediator_id);
+
+        return Inertia::render('Apps/Mediator/DetailMediator', [
+            'mediator' => $mediator
+        ]);
     }
 }

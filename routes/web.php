@@ -93,6 +93,8 @@ Route::middleware('auth')->group(function () {
 
             Route::group(['middleware' => 'can:manage_mediasi'], function(){
                 Route::get('/mediasi', [MediasiController::class, 'index'])->name('mediasi.index');
+                Route::get('/mediasi/{perkara_id}/mediator', [MediasiController::class, 'show_mediator'])->name('mediasi.show_mediator')->middleware('can:show_mediator');
+                Route::get('/mediasi/{perkara_id}/mediator/{mediator_id}/detail', [MediasiController::class, 'detail_mediator'])->name('mediasi.detail_mediator')->middleware('can:detail_mediator');
 
                 Route::get('/mediasi/{perkara_id}/penilaian/create', [ReviewController::class, 'create'])->name('mediasi.penilaian.create')->middleware('can:menilai_mediator');
 
@@ -142,71 +144,64 @@ Route::middleware('auth')->group(function () {
         $roles_mediator_app = $user->rolesForApp(1)->load('permissions');
         $roles_bukutamu_app = $user->rolesForApp(2)->load('permissions');
 
-        $mediasi_pihak1 = DB::connection('paboyo_sync_sipp')
-            ->table('perkara_mediasi AS a')
+        $mediasi_pihak1 = DB::connection('paboyo_sync_sipp')->table('perkara AS b')
             ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
-            ->join('perkara AS b', 'a.perkara_id', 'b.perkara_id')
-            ->join('mediator AS c', 'a.mediator_id', 'c.id')
-            ->join('perkara_pihak1 AS d', 'a.perkara_id', 'd.perkara_id')
-            ->join('pihak AS f', 'd.pihak_id', 'f.id')
-            ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
+            //->whereNotNull('a.mediasi_id')
+            ->leftJoin('perkara_mediasi AS a', 'b.perkara_id', 'a.perkara_id')
+            ->leftJoin('mediator AS c', 'a.mediator_id', 'c.id')
+            ->join('perkara_pihak1 AS d', 'b.perkara_id', 'd.perkara_id')
+            ->join('pihak AS e', 'd.pihak_id', 'e.id')
+            ->leftJoin('perkara_mediator AS h', 'b.perkara_id', 'h.perkara_id')
             ->select(
-                'a.perkara_id', 
-                'a.mediasi_id', 
-                'a.penetapan_penunjukan_mediator',
-                'a.dimulai_mediasi',
-                'a.keputusan_mediasi',
-                'a.tgl_kesepakatan_perdamaian',
-                'a.hasil_mediasi',
-                'a.isi_kesepakatan_perdamaian',
-                'b.tanggal_pendaftaran', 
-                'b.nomor_perkara', 
-                'b.diinput_tanggal AS perkara_diinput_tanggal',  
-                'b.diperbaharui_tanggal AS perkara_diperbaharui_tanggal',
-                'f.id AS pihak_id', 
-                'd.nama AS pihak_nama', 
-                'd.diinput_tanggal AS perkara_pihak_diinput_tanggal', 
-                'd.diperbaharui_tanggal AS perkara_pihak_diperbaharui_tanggal',
-                'f.email AS pihak_email', 
-                'f.nomor_indentitas AS pihak_nik', 
-                'f.telepon', 
-                'f.alamat',
-                'f.pekerjaan',
-                'h.mediator_id');
+                'b.perkara_id', //ok
+                'a.mediasi_id', //ok
+                'b.tanggal_pendaftaran', //ok
+                'b.nomor_perkara', //ok
+                'b.diinput_tanggal AS perkara_diinput_tanggal',  //ok
+                'e.id AS pihak_id', //ok
+                'd.nama AS pihak_nama', //ok
+                'd.diinput_tanggal AS perkara_pihak_diinput_tanggal', //ok
+                'd.diperbaharui_tanggal AS perkara_diperbaharui_tanggal', //ok
+                'e.email AS pihak_email', //ok
+                'e.nomor_indentitas AS pihak_nik', //ok
+                'e.alamat', //ok
+                'e.tempat_lahir', //ok
+                'e.tanggal_lahir', //ok
+                'e.jenis_kelamin', //ok
+                'e.pekerjaan', //ok
+                'h.mediator_id' //ok
+            );
 
-            $mediasi_pihak2 = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi AS a')
+        $mediasi_pihak2 = DB::connection('paboyo_sync_sipp')->table('perkara AS b')
             ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
-            ->join('perkara AS b', 'a.perkara_id', 'b.perkara_id')
-            ->join('mediator AS c', 'a.mediator_id', 'c.id')
-            ->join('perkara_pihak2 AS e', 'a.perkara_id', 'e.perkara_id')
-            ->join('pihak AS g', 'e.pihak_id', 'g.id')
-            ->join('perkara_mediator AS h', 'a.perkara_id', 'h.perkara_id')
+            //->whereNotNull('a.mediasi_id')
+            ->leftJoin('perkara_mediasi AS a', 'b.perkara_id', 'a.perkara_id')
+            ->leftJoin('mediator AS c', 'a.mediator_id', 'c.id')
+            ->join('perkara_pihak2 AS d', 'b.perkara_id', 'd.perkara_id')
+            ->join('pihak AS e', 'd.pihak_id', 'e.id')
+            ->leftJoin('perkara_mediator AS h', 'b.perkara_id', 'h.perkara_id')
             ->select(
-                'a.perkara_id', 
-                'a.mediasi_id', 
-                'a.penetapan_penunjukan_mediator',
-                'a.dimulai_mediasi',
-                'a.keputusan_mediasi',
-                'a.tgl_kesepakatan_perdamaian',
-                'a.hasil_mediasi',
-                'a.isi_kesepakatan_perdamaian',
-                'b.tanggal_pendaftaran', 
-                'b.nomor_perkara',  
-                'b.diinput_tanggal AS perkara_diinput_tanggal',  
-                'b.diperbaharui_tanggal AS perkara_diperbaharui_tanggal',  
-                'g.id AS pihak_id', 
-                'e.nama AS pihak_nama', 
-                'e.diinput_tanggal AS perkara_pihak_diinput_tanggal', 
-                'e.diperbaharui_tanggal AS perkara_pihak_diperbaharui_tanggal', 
-                'g.email AS pihak_email', 
-                'g.nomor_indentitas AS pihak_nik', 
-                'g.telepon', 
-                'g.alamat', 
-                'g.pekerjaan', 
-                'h.mediator_id');
-
+                'b.perkara_id', //ok
+                'a.mediasi_id', //ok
+                'b.tanggal_pendaftaran', //ok
+                'b.nomor_perkara', //ok
+                'b.diinput_tanggal AS perkara_diinput_tanggal',  //ok
+                'e.id AS pihak_id', //ok
+                'd.nama AS pihak_nama', //ok
+                'd.diinput_tanggal AS perkara_pihak_diinput_tanggal', //ok
+                'd.diperbaharui_tanggal AS perkara_diperbaharui_tanggal', //ok
+                'e.email AS pihak_email', //ok
+                'e.nomor_indentitas AS pihak_nik', //ok
+                'e.alamat', //ok
+                'e.tempat_lahir', //ok
+                'e.tanggal_lahir', //ok
+                'e.jenis_kelamin', //ok
+                'e.pekerjaan', //ok
+                'h.mediator_id' //ok
+            );
                 
-            $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->get();
+        $union = $mediasi_pihak1->unionAll($mediasi_pihak2)->get();
+        
         $data_mediator = DB::connection('paboyo_sync_sipp')->table('mediator')->select('id', 'nama_gelar', 'tempat_lahir', 'tgl_lahir', 'alamat')->get();
 
         $perkara_mediasi = DB::connection('paboyo_sync_sipp')->table('perkara_mediasi AS a')
@@ -233,10 +228,7 @@ Route::middleware('auth')->group(function () {
         ->get();
 
         return response()->json([
-            'perkara_mediasi_count' => $perkara_mediasi->count(),
-            'perkaras' => $perkaras->count(),
             'union' => $union,
-            'perkara_mediasi' => $perkara_mediasi,
         ]);
         
     });
