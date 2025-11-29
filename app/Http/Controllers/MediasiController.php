@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Response;
+use Carbon\Carbon;
 
 class MediasiController extends Controller
 {
@@ -69,7 +70,18 @@ class MediasiController extends Controller
         $mediator = Mediator::find($mediator_id);
 
         return Inertia::render('Apps/Mediator/DetailMediator', [
-            'mediator' => $mediator
+            'mediator' => $mediator,
+            'perkara_id' => $perkara_id,
+            'mediator_id' => $mediator_id
         ]);
+    }
+
+    public function pilih_mediator($app_id, $perkara_id, $mediator_id){
+        $perkara = Perkara::find($perkara_id);
+        $perkara->update([
+            'diperbaharui_tgl' => Carbon::now()
+        ]);
+        
+        return redirect()->route('mediasi.show_mediator', ['app_id'=>$app_id, 'perkara_id'=>$perkara_id, 'mediator_id'=>$mediator_id]);
     }
 }

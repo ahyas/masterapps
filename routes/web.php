@@ -93,8 +93,12 @@ Route::middleware('auth')->group(function () {
 
             Route::group(['middleware' => 'can:manage_mediasi'], function(){
                 Route::get('/mediasi', [MediasiController::class, 'index'])->name('mediasi.index');
+
                 Route::get('/mediasi/{perkara_id}/mediator', [MediasiController::class, 'show_mediator'])->name('mediasi.show_mediator')->middleware('can:show_mediator');
+
                 Route::get('/mediasi/{perkara_id}/mediator/{mediator_id}/detail', [MediasiController::class, 'detail_mediator'])->name('mediasi.detail_mediator')->middleware('can:detail_mediator');
+
+                Route::get('/mediasi/{perkara_id}/mediator/{mediator_id}/pilih_mediator', [MediasiController::class, 'pilih_mediator'])->name('mediasi.detail_mediator.pilih');
 
                 Route::get('/mediasi/{perkara_id}/penilaian/create', [ReviewController::class, 'create'])->name('mediasi.penilaian.create')->middleware('can:menilai_mediator');
 

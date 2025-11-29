@@ -6,13 +6,16 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 const props = defineProps({
     mediator:{
         type:Object
+    },
+    perkara_id:{
+        type:String
+    },
+    mediator_id:{
+        type:String
     }
 });
-console.log(props.mediator);
+console.log(props.perkara_id, props.mediator_id);
 
-const saveMediator = (mediator_id) => {
-    console.log(mediator_id);
-};
 </script>
 
 <template>
@@ -29,7 +32,7 @@ const saveMediator = (mediator_id) => {
             <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4 mb-4">
                 <p>{{ props.mediator }}</p>
             </div>
-            <PrimaryButton @click="saveMediator(props.mediator.id)">Pilih mediator</PrimaryButton>
+            <Link :href="route('mediasi.detail_mediator.pilih', {app_id:$page.props.auth.app_id, perkara_id:props.perkara_id, mediator_id:props.mediator_id})">Pilih</Link>
         </div>
 
     </FlowbiteLayout>
