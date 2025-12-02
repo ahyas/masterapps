@@ -12,6 +12,8 @@ class Perkara extends Model
     protected $connection = 'mediasiapp_conn';
     protected $table = 'perkaras';
     protected $fillable = ['diperbaharui_tgl'];
+    const UPDATED_AT = 'diperbaharui_tgl';
+    const CREATED_AT = 'diinput_tgl';
 
     public function pihaks():BelongsToMany{
         return $this->belongsToMany(Pihak::class);

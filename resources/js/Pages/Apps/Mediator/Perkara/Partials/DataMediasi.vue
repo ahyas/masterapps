@@ -6,7 +6,7 @@ const props = defineProps({
         type:Object
     }
 });
-console.log('detail mediasi: ',props.data.mediasi);
+console.log('detail mediasi: ',props.data);
 </script>
 
 <template>

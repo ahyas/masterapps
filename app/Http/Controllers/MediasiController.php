@@ -18,7 +18,7 @@ class MediasiController extends Controller
     public function Index():Response{
         if(Auth::user()->user_type == 'mediator'){
             $mediator = Mediator::find(Auth::user()->id);
-            $data = $mediator->perkaras()->with(['pihaks', 'reviews'])->get();
+            $data = $mediator->perkaras()->with(['pihaks', 'mediator', 'mediasi', 'reviews'])->get();
 
             $reviews = $mediator->load('reviews');
         }else{
@@ -78,10 +78,11 @@ class MediasiController extends Controller
 
     public function pilih_mediator($app_id, $perkara_id, $mediator_id){
         $perkara = Perkara::find($perkara_id);
-        $perkara->update([
-            'diperbaharui_tgl' => Carbon::now()
-        ]);
+        $mediator = Mediator::find($mediator_id);
+
+        $perkara->mediator()->associate($mediator);
+        $perkara->save();
         
-        return redirect()->route('mediasi.show_mediator', ['app_id'=>$app_id, 'perkara_id'=>$perkara_id, 'mediator_id'=>$mediator_id]);
+        return redirect()->route('mediasi.index', ['app_id'=>$app_id]);
     }
 }
