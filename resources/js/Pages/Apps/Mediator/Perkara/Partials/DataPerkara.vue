@@ -8,6 +8,7 @@ const props = defineProps({
         type:String
     }
 })
+console.log('mediasi ',props.data.mediasi)
 </script>
 
 <template>
@@ -17,6 +18,8 @@ const props = defineProps({
                 <th class=" text-left">Nomor perkara</th>
                 <th class=" text-left">Tanggal pendaftaran</th>
                 <th class=" text-left">Pihak</th>
+                <th class=" text-left" v-if="$page.props.auth.can.akses_mediator">Hasil Mediasi</th>
+                <th class=" text-left" v-if="$page.props.auth.can.akses_mediator">Tanggal keputusan mediasi</th>
                 <!--<th v-if="props.user_type == 'pihak'" class=" text-left">Mediator</th>-->
             </tr>
             <tr v-if="$page.props.auth.can.menilai_mediator">
@@ -35,6 +38,12 @@ const props = defineProps({
                         </li> 
                     </ul>
                 </td>
+                <td>
+                    <span class="text-red-600" v-if="props.data.mediasi == null || props.data.mediasi.hasil_mediasi == null">N/A</span><span v-else>{{ props.data.mediasi.hasil_mediasi }}</span>
+                </td>
+                <td>
+                    <span class="text-red-600" v-if="props.data.mediasi == null || props.data.mediasi.keputusan_mediasi == null">N/A</span><span v-else>{{ props.data.mediasi.keputusan_mediasi }}</span>
+                </td>
             </tr>
             <tr v-else v-for="perkara in props.data">
                 <td>{{ perkara.nomor_perkara }}</td>
@@ -50,6 +59,19 @@ const props = defineProps({
                             </span>
                         </span>
                     </ul>
+                </td>
+                <td>
+                    <span class='text-red-500' v-if="perkara.mediasi?.hasil_mediasi == null">
+                        N/A
+                    </span>
+                    <span v-else>{{ perkara.mediasi.hasil_mediasi }}</span></td>
+                <td>
+                    <span class='text-red-500' v-if="perkara.mediasi?.keputusan_mediasi == null">
+                        N/A
+                    </span>
+                    <span v-else>
+                        {{ perkara.mediasi.keputusan_mediasi }}
+                    </span>
                 </td>
             </tr>
             

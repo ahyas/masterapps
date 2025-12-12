@@ -18,7 +18,8 @@ class MediasiController extends Controller
     public function Index():Response{
         if(Auth::user()->user_type == 'mediator'){
             $mediator = Mediator::find(Auth::user()->id);
-            $data = $mediator->perkaras()->with(['pihaks', 'mediator', 'mediasi', 'reviews'])->get();
+            $data = $mediator->perkaras()->with(['pihaks', 'mediator', 'mediasi', 'reviews'])
+            ->get();
 
             $reviews = $mediator->load('reviews');
         }else{
@@ -36,6 +37,7 @@ class MediasiController extends Controller
             $mediator = $perkara_pihak->load('mediator');
 
             $reviews = $perkara_pihak->reviews()->where('user_id', Auth::user()->id)->first();
+
 
         }
 
@@ -58,21 +60,43 @@ class MediasiController extends Controller
     }
 
     public function show_mediator($app_id, $perkara_id){
-        $mediator = Mediator::all();
+        //$mediator = Mediator::with('perkaras')->get();
+        $mediator = Mediator::withCount('perkaras AS jumlah_perkara')
+        ->withSum('reviews AS total_reviews', 'rating')
+        ->withCount('reviews AS length_review')
+        ->orderBy('jumlah_perkara', 'DESC')
+        ->get();
+
+        $nilai_mediator = DB::connection('mediasiapp_conn')
+        ->table('mediators')
+        ->select('mediators.id AS mediator_id', 'mediasis.hasil_mediasi', DB::raw('COUNT(mediasis.hasil_mediasi) AS count_mediasi'))
+        ->leftjoin('perkaras', 'mediators.id', 'perkaras.mediator_id')
+        ->leftjoin('mediasis', 'perkaras.mediasi_id', 'mediasis.id')
+        ->groupBy('mediators.id', 'mediators.nama', 'mediasis.hasil_mediasi')
+        ->orderBy('perkaras.mediator_id')
+        ->get();
+
+        $reviews = Mediator::with('reviews')->get();
 
         return Inertia::render('Apps/Mediator/DaftarMediator', [
             'mediator' => $mediator,
             'perkara_id' => $perkara_id,
+            'reviews' => $reviews, 
+            'nilai_mediator' => $nilai_mediator
         ]);
     }
 
     public function detail_mediator($app_id, $perkara_id, $mediator_id){
         $mediator = Mediator::find($mediator_id);
+        $jumlah_keberhasilan = $mediator->perkaras()->withWhereHas('mediasi', function($query){
+            $query->whereIn('hasil_mediasi', ['Y1', 'Y2', 'S']);
+        })->get();
 
         return Inertia::render('Apps/Mediator/DetailMediator', [
             'mediator' => $mediator,
             'perkara_id' => $perkara_id,
-            'mediator_id' => $mediator_id
+            'mediator_id' => $mediator_id,
+            'jumlah_keberhasilan' => $jumlah_keberhasilan->count()
         ]);
     }
 

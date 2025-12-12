@@ -14,4 +14,8 @@ class Mediasi extends Model
     public function perkaras():HasOne{
         return $this->hasOne(Perkara::class);
     }
+
+    public function mediators(){
+        return $this->belongsTo(Mediator::class);
+    }
 }

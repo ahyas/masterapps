@@ -29,6 +29,8 @@ console.log('data ', props.data)
 console.log('can ',usePage().props.auth.can)
 console.log('review ', props.review);
 console.log('mediator ', props.mediator.mediator);
+console.log(props.mediator.mediator," - ", props.data.mediasi);
+
 </script>
 
 <template>
@@ -45,35 +47,26 @@ console.log('mediator ', props.mediator.mediator);
                 <DataPerkara v-if="Object.keys(props.data).length" :data="props.data" :user_type="props.user_type"/>
                 <EmptyData v-else />
             </div>
-            
-            <div v-if="$page.props.auth.can.menilai_mediator">
-                <hr/>
-                <p><u>Detail Mediasi: </u></p>
-                <DataMediasi 
-                    v-if="$page.props.auth.can.menilai_mediator && props.data.mediasi !== null" 
-                    :data="props.data" />
-                <EmptyData v-else />
-            </div>
         </div>
 
         <div v-if="$page.props.auth.can.menilai_mediator" class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
             <div class="flex justify-left items-center mb-2">
-                <p><u>Detail Mediator :</u></p>
+                <p><u>Mediator Anda :</u></p>
             </div>
-            <Mediator v-if="$page.props.auth.can.menilai_mediator && props.mediator.mediator !== null" :mediator="props.mediator.mediator" />
+            <Mediator v-if="$page.props.auth.can.menilai_mediator && props.mediator.mediator !== null" :mediator="props.mediator.mediator"/>
             <EmptyData v-else />
 
             <div class="flex">
                 <Link 
-                    v-if="$page.props.auth.can.menilai_mediator && props.mediator.mediator !== null" 
+                    v-if="$page.props.auth.can.menilai_mediator && props.mediator.mediator !== null && props.data.mediasi !== null && props.data.mediasi.hasil_mediasi !== null && props.data.mediasi.keputusan_mediasi !== null"
                     :href="route('mediasi.penilaian.create', {app_id:$page.props.auth.app_id, perkara_id:props.mediator.id})" 
                     type="button" 
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-4"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-3"
                 >
                     Berikan review
                 </Link>
                 <Link 
-                    v-else 
+                    v-if="$page.props.auth.can.menilai_mediator && props.mediator.mediator == null" 
                     :href="route('mediasi.show_mediator', {
                         app_id:$page.props.auth.app_id, 
                         perkara_id:props.mediator.id
@@ -100,10 +93,13 @@ console.log('mediator ', props.mediator.mediator);
                     Pilih mediator
                 </Link>
             </div>
-
-            <p class="mt-4"><u>Review Anda :</u></p>
-            <Review v-if="props.review !== null" :data="props.review" />
-            <EmptyData v-else />
+            <div v-if="$page.props.auth.can.menilai_mediator && props.mediator.mediator !== null && props.data.mediasi !== null && props.data.mediasi.hasil_mediasi !== null && props.data.mediasi.keputusan_mediasi !== null">
+                <div class="flex justify-left items-center mb-2">
+                    <p class="mt-4"><u>Review Anda :</u></p>
+                </div>
+                <Review v-if="props.review !== null" :data="props.review" />
+                <EmptyData v-else />
+            </div>
         </div>
     </FlowbiteLayout>
 </template>
