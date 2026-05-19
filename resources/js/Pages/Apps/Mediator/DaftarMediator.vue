@@ -56,14 +56,15 @@ const summary = computed(() => {
                     result[mediator.id].tingkat_keberhasilan = (result[mediator.id].berhasil /(result[mediator.id].berhasil + result[mediator.id].gagal)*100).toFixed(2);
                 }
             }
+            
             //end::perhitungan dan kalkulasi kolom
         });
     })
-
-  return result
+    //mengurutkan berdasarkan tingkat keberhasilan tertingtertinggi
+    return Object.values(result).sort(
+        (a, b) =>  b.tingkat_keberhasilan - a.tingkat_keberhasilan 
+    )
 });
-
-
 
 </script>
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\AuthenticatePihakController;
 use App\Http\Controllers\MediasiController;
 use App\Http\Controllers\PerkaraController;
 use App\Http\Controllers\PermissionController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\PrivilegeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SearchPerkaraController;
 use App\Http\Controllers\SinkronController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
@@ -20,15 +22,30 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('HomePage', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('home');
+
+Route::post('/perkara/search', [SearchPerkaraController::class, 'search_result'])->name('perkara.search');
+
+Route::get('/pihak/{pihak_id}/authenticate', function($pihak_id, Request $request){
+    
+    Auth::loginUsingId($pihak_id);
+    
+    $user = User::find(Auth::user()->id);
+
+    $request->session()->regenerate();
+
+    return redirect()->intended(route('mediasi.index', ['app_id' => 1]));
+    
+})->name('pihak.authenticate');
 
 Route::get('/dashboard', function () {
     $user = User::find(Auth::user()->id);
@@ -94,6 +111,8 @@ Route::middleware('auth')->group(function () {
             Route::group(['middleware' => 'can:manage_mediasi'], function(){
                 Route::get('/mediasi', [MediasiController::class, 'index'])->name('mediasi.index');
 
+                Route::get('/mediasi/permintaan', [MediasiController::class, 'permintaan'])->name('mediasi.permintaan')->middleware('can:manage_permintaan');
+
                 Route::get('/mediasi/{perkara_id}/mediator', [MediasiController::class, 'show_mediator'])->name('mediasi.show_mediator')->middleware('can:show_mediator');
 
                 Route::get('/mediasi/{perkara_id}/mediator/{mediator_id}/detail', [MediasiController::class, 'detail_mediator'])->name('mediasi.detail_mediator')->middleware('can:detail_mediator');
@@ -150,6 +169,7 @@ Route::middleware('auth')->group(function () {
 
         $mediasi_pihak1 = DB::connection('paboyo_sync_sipp')->table('perkara AS b')
             ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
+            ->whereNotNull('h.mediator_id')
             //->whereNotNull('a.mediasi_id')
             ->leftJoin('perkara_mediasi AS a', 'b.perkara_id', 'a.perkara_id')
             ->leftJoin('mediator AS c', 'a.mediator_id', 'c.id')
@@ -178,6 +198,7 @@ Route::middleware('auth')->group(function () {
 
         $mediasi_pihak2 = DB::connection('paboyo_sync_sipp')->table('perkara AS b')
             ->whereYear('b.tanggal_pendaftaran', '>=', 2025)
+            ->whereNotNull('h.mediator_id')
             //->whereNotNull('a.mediasi_id')
             ->leftJoin('perkara_mediasi AS a', 'b.perkara_id', 'a.perkara_id')
             ->leftJoin('mediator AS c', 'a.mediator_id', 'c.id')

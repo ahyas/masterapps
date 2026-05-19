@@ -34,16 +34,34 @@ console.log(props.app_role);
                         <p class=" font-semibold">Daftar Roles</p>
                         <p class=" mb-2">Setiap aplikasi memiliki roles nya masing-masing</p>
                         <hr></hr>
-                        <ul>
-                            <li v-for="app in props.app_role" class=" mb-2">
-                                <span class=" font-semibold ">{{ app.name }}</span>
-                                <ul class=" list-disc list-inside text-sm">
-                                    <li v-for="role in app.roles">
-                                        {{ role.name }}
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 mt-4">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3" width="5">
+                                        No
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">App</th>
+                                    <th scope="col" class="px-6 py-3">Role / Slug</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(app, index) in props.app_role" :key="app.id" class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 align-top">
+                                        {{ index + 1 }}
+                                    </td>
+                                    <td class="px-6 py-4 text-left align-top">{{ app.name }}</td>
+                                    <td class="px-6 py-4 text-left align-top">
+                                        <ul class=" list-disc list-inside text-sm">
+                                            <li v-for="role in app.roles">
+                                                {{ role.name }} / {{ role.slug }}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

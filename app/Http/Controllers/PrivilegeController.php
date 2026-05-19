@@ -17,10 +17,21 @@ class PrivilegeController extends Controller
         $current_app = App::find($app_id);
         
         if($current_app->slug == 'master_app'){
-            $user_apps = User::with(['roles.app'])->get();
+            $user_apps = User::with(['roles.app'])
+            ->latest()
+            ->where(function ($query) {
+                if ($search = request()->search) {
+                    $query->where('name', 'like', '%'.$search .'%')
+                        ->orWhere('email', 'like', '%'.$search.'%')
+                        ->orWhere('username', 'like', '%'.$search.'%');
+
+                }
+            })
+            ->paginate(10)->withQueryString();
 
             return Inertia::render('Apps/Master/Privileges/Index', [
-                'user_apps' => $user_apps
+                'user_apps' => $user_apps,
+                'query' => (object) request()->query(),
             ]); 
 
         }else{

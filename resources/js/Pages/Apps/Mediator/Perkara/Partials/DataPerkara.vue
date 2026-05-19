@@ -15,6 +15,7 @@ console.log('mediasi ',props.data.mediasi)
     <table class="w-full">
         <tbody>
             <tr>
+                <th class=" text-left">No.</th>
                 <th class=" text-left">Nomor perkara</th>
                 <th class=" text-left">Tanggal pendaftaran</th>
                 <th class=" text-left">Pihak</th>
@@ -23,6 +24,7 @@ console.log('mediasi ',props.data.mediasi)
                 <!--<th v-if="props.user_type == 'pihak'" class=" text-left">Mediator</th>-->
             </tr>
             <tr v-if="$page.props.auth.can.menilai_mediator">
+                <td>1</td>
                 <td>{{ props.data.nomor_perkara }}</td>
                 <td>{{ props.data.tgl_pendaftaran }}</td>
                 <td>
@@ -45,7 +47,8 @@ console.log('mediasi ',props.data.mediasi)
                     <span class="text-red-600" v-if="props.data.mediasi == null || props.data.mediasi.keputusan_mediasi == null">N/A</span><span v-else>{{ props.data.mediasi.keputusan_mediasi }}</span>
                 </td>
             </tr>
-            <tr v-else v-for="perkara in props.data">
+            <tr v-else v-for="(perkara, index) in props.data" :key="perkara.id">
+                <td>{{ index + 1 }}</td>
                 <td>{{ perkara.nomor_perkara }}</td>
                 <td>{{ perkara.tgl_pendaftaran }}</td>
                 <td>

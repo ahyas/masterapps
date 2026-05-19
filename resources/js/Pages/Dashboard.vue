@@ -29,7 +29,7 @@ console.log(props.app_user.length);
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        <p>Selamat datang <span class=" font-bold">{{ $page.props.auth.user.name }}</span></p>
+                        <p>Selamat datang <span class=" font-bold">{{ $page.props.auth.user.name }}</span>. Pilih aplikasi dibawah.</p>
                         
                         <ul v-if="props.app_user.length > 0">
                             <li v-for="app in props.app_user">

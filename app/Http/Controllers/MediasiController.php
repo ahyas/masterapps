@@ -18,7 +18,8 @@ class MediasiController extends Controller
     public function Index():Response{
         if(Auth::user()->user_type == 'mediator'){
             $mediator = Mediator::find(Auth::user()->id);
-            $data = $mediator->perkaras()->with(['pihaks', 'mediator', 'mediasi', 'reviews'])
+            $data = $mediator->perkaras()->with(['pihaks', 'mediator', 'reviews'])
+            ->withWhereHas('mediasi') //proses mediasi sudah berjalan di SIPP
             ->get();
 
             $reviews = $mediator->load('reviews');
@@ -37,7 +38,6 @@ class MediasiController extends Controller
             $mediator = $perkara_pihak->load('mediator');
 
             $reviews = $perkara_pihak->reviews()->where('user_id', Auth::user()->id)->first();
-
 
         }
 
@@ -106,7 +106,22 @@ class MediasiController extends Controller
 
         $perkara->mediator()->associate($mediator);
         $perkara->save();
+
+        // DB::connection('mediasiapp_conn')->table('perkaras')->where('perkara_id', $perkara_id)->update([
+        //    'mediator_pilihan_id' => $mediator_id 
+        // ]);
         
         return redirect()->route('mediasi.index', ['app_id'=>$app_id]);
+    }
+
+    public function permintaan($app_id){
+        $mediator = Mediator::find(Auth::user()->id);
+        $data = $mediator->perkaras()->with(['pihaks', 'mediator', 'reviews'])
+        ->doesntHave('mediasi')->get();
+
+        return Inertia::render('Apps/Mediator/Permintaan/Index', [
+            'data' => $data,
+            'user_type' => Auth::user()->user_type,
+        ]);
     }
 }

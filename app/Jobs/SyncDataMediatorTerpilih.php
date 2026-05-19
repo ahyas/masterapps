@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class SyncDataPerkara implements ShouldQueue
+class SyncDataMediatorTerpilih implements ShouldQueue
 {
     use Queueable, Dispatchable, InteractsWithQueue, SerializesModels;
 
@@ -35,31 +35,17 @@ class SyncDataPerkara implements ShouldQueue
                 $perkara = $chunk->map(function($perkara){
                     return [
                         'id' => $perkara->perkara_id,
-                        'mediasi_id' => $perkara->mediasi_id,
-                        'tgl_pendaftaran' => $perkara->tanggal_pendaftaran,
-                        'nomor_perkara' => $perkara->nomor_perkara,
-                        'tahapan_id' => $perkara->tahapan_id,
-                        'proses_id' => $perkara->proses_id,
-                        'tahapan_deskripsi' => $perkara->tahapan_deskripsi,
-                        'proses_deskripsi' => $perkara->proses_deskripsi,
-                        'diinput_tgl' => $perkara->perkara_diinput_tanggal,
-                        'diperbaharui_tgl' => $perkara->perkara_diperbaharui_tanggal ? $perkara->perkara_diperbaharui_tanggal : null,
+                        'mediator_id' => $perkara->mediator_id
                     ];
                 })->toArray();
 
                 DB::connection('mediasiapp_conn')->table('perkaras')->upsert(
                     $perkara,
-                    ['id'],
                     [
-                        'tgl_pendaftaran', 
-                        'nomor_perkara',
-                        'mediasi_id',
-                        'tahapan_id',
-                        'proses_id',
-                        'tahapan_deskripsi',
-                        'proses_deskripsi',
-                        'diinput_tgl', 
-                        'diperbaharui_tgl'
+                        'id'
+                    ],
+                    [
+                        'mediator_id',
                     ]
                 );
             });

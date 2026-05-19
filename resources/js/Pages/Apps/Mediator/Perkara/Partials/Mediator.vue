@@ -13,9 +13,9 @@ console.log(props.jumlah_keberhasilan);
 
 <template>
 <p>
-    <b>Nama :</b> {{ props.mediator.nama !== null ? props.mediator.nama : "-" }}
+     {{ props.mediator.nama !== null ? props.mediator.nama : "-" }}
 </p>
-<p>
+<!-- <p>
     <b>Tempat lahir :</b> {{ props.mediator.tempat_lahir !== null ? props.mediator.tempat_lahir : "-"  }}
 </p>
 <p>
@@ -24,5 +24,5 @@ console.log(props.jumlah_keberhasilan);
 <p>
     <b>Alamat: </b>{{ props.mediator.alamat !== null ? props.mediator.alamat : "-" }}
 
-</p>
+</p> -->
 </template>

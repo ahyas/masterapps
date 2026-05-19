@@ -7,6 +7,7 @@ import EmptyData from './Partials/EmptyData.vue';
 import Review from './Partials/Review.vue';
 import Mediator from './Partials/Mediator.vue';
 import AverageReview from './Partials/AverageReview.vue';
+import ErrorAlert from '@/Components/ErrorAlert.vue';
 
 const props = defineProps({
     data:{
@@ -37,9 +38,6 @@ console.log(props.mediator.mediator," - ", props.data.mediasi);
     <Head title="Dashboard < Mediator" />
 
     <FlowbiteLayout>
-        <template #header>
-            <AverageReview v-if="$page.props.auth.can.melihat_average_review && props.review.reviews.length" :review="props.review.reviews" />
-        </template>
 
         <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
             <p class="mb-1"><u>Detail perkara :</u></p>
@@ -54,7 +52,7 @@ console.log(props.mediator.mediator," - ", props.data.mediasi);
                 <p><u>Mediator Anda :</u></p>
             </div>
             <Mediator v-if="$page.props.auth.can.menilai_mediator && props.mediator.mediator !== null" :mediator="props.mediator.mediator"/>
-            <EmptyData v-else />
+            <ErrorAlert v-else >Data tidak ditemukan.</ErrorAlert>
 
             <div class="flex">
                 <Link 
@@ -63,7 +61,7 @@ console.log(props.mediator.mediator," - ", props.data.mediasi);
                     type="button" 
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-3"
                 >
-                    Berikan review
+                    Berikan penilaian
                 </Link>
                 <Link 
                     v-if="$page.props.auth.can.menilai_mediator && props.mediator.mediator == null" 
@@ -95,7 +93,7 @@ console.log(props.mediator.mediator," - ", props.data.mediasi);
             </div>
             <div v-if="$page.props.auth.can.menilai_mediator && props.mediator.mediator !== null && props.data.mediasi !== null && props.data.mediasi.hasil_mediasi !== null && props.data.mediasi.keputusan_mediasi !== null">
                 <div class="flex justify-left items-center mb-2">
-                    <p class="mt-4"><u>Review Anda :</u></p>
+                    <p class="mt-4"><u>Penilaian Anda :</u></p>
                 </div>
                 <Review v-if="props.review !== null" :data="props.review" />
                 <EmptyData v-else />
