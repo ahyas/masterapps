@@ -24,9 +24,6 @@ console.log(props.jumlah_keberhasilan);
     <Head title="Dashboard < Mediator" />
 
     <FlowbiteLayout>
-        <template #header>
-            <h4>Detail mediator</h4>
-        </template>
 
         <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
             <p class="mb-1"><u>Detail Mediator :</u></p>

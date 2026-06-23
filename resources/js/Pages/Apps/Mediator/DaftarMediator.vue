@@ -72,12 +72,9 @@ const summary = computed(() => {
     <Head title="Dashboard < Mediator" />
 
     <FlowbiteLayout>
-        <template #header>
-            <h4>Daftar mediator</h4>
-        </template>
 
-        <div class="p-4 border border-gray-200 bg-white rounded-lg mt-4">
-            <p class="mb-1"><u>Daftar Mediators :</u></p>
+        <div class="p-4 border border-gray-200 bg-white rounded-lg">
+            <p class="mb-1"><u>Daftar Mediator :</u></p>
         <div class="grid grid-cols-4 md:grid-cols-3 gap-4 over">
                 
 
