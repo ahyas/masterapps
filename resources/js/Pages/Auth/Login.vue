@@ -34,6 +34,7 @@
 </script>
 
 <template>
+    <Head title="Login" />
     <div class="min-h-screen flex">
         <!-- Left Side -->
         <div
@@ -50,7 +51,7 @@
                     <div>
                         <Link href="/">
                         
-                            <img src="/image/logo_pa.png" width="80px" />
+                            <img :src="`${$page.props.auth.domain}/image/logo_pa.png`" width="80px" />
                         </Link>
                     </div>
 

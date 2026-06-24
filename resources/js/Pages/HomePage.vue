@@ -1,4 +1,6 @@
+
 <template>
+    <Head title="Home" />
     <div class="min-h-screen bg-slate-50">
         <!-- Header -->
         <header class="bg-green-800 shadow-lg">

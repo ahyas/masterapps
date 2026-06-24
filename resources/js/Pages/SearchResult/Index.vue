@@ -22,6 +22,7 @@ import { Head, Link } from '@inertiajs/vue3';
     console.log('perkara_pihak_mediator ',props.perkara_pihak_mediator);
 </script>
 <template>
+    <Head title="Search result" />
 
     <div class="bg-green-800 text-white">
         <div class="max-w-5xl py-10 px-6">

@@ -56,7 +56,8 @@ class HandleInertiaRequests extends Middleware
                 'user_apps' => $user_apps,
                 'permissions' => $app_role_permission,
                 'can' => $permissions,
-                'app_id' => $request->route('app_id')
+                'app_id' => $request->route('app_id'),
+                'domain' => env('APP_URL')
             ],
         ];
     }
